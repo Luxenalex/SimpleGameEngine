@@ -21,8 +21,8 @@ public class GameTime {
         return passedTime;
     }
 
-    public boolean shouldUpdate(final double FPS_LIMIT) {
-        return unprocessedTime >= FPS_LIMIT;
+    public boolean shouldUpdate(final double timeStep) {
+        return unprocessedTime >= timeStep;
     }
 
     public void decrementUnprocessedTime(final double value) {

@@ -3,7 +3,7 @@ public class SimpleGameEngine implements Runnable {
     private Thread gameLoop;
 
     private boolean running;
-    private final double FPS_LIMIT = 1.0/60.0;
+    private final double TIME_STEP = 1.0 / 60.0;
 
     private WindowSettings windowSettings;
     private Window window;
@@ -27,9 +27,7 @@ public class SimpleGameEngine implements Runnable {
     public void run() {
         running = true;
 
-        final double BILLION = 1000000000.0;
-        boolean render = false;
-
+        boolean render;
         GameTime gameTime = new GameTime();
 
         double frameTime = 0;
@@ -43,8 +41,8 @@ public class SimpleGameEngine implements Runnable {
             frameTime += gameTime.getPassedTime();
 
             //TODO Update game
-            while(gameTime.shouldUpdate(FPS_LIMIT)) {
-                gameTime.decrementUnprocessedTime(FPS_LIMIT);
+            while(gameTime.shouldUpdate(TIME_STEP)) {
+                gameTime.decrementUnprocessedTime(TIME_STEP);
                 render = true;
                 System.out.println("FPS: " + fps);
 
