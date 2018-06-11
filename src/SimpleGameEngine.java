@@ -1,14 +1,18 @@
 public class SimpleGameEngine implements Runnable {
 
     private Thread gameLoop;
+
     private boolean running;
     private final double FPS_LIMIT = 1.0/60.0;
+
+    private WindowSettings windowSettings;
 
     public SimpleGameEngine(){
 
     }
 
     public void start() {
+        windowSettings = new WindowSettings();
         gameLoop = new Thread(this);
         gameLoop.run();
     }
