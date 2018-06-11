@@ -28,20 +28,37 @@ public class SimpleGameEngine implements Runnable {
         double passedTime = 0;
         double unprocessedTime = 0;
 
+        double frameTime = 0;
+        int frames = 0;
+        int fps = 0;
+
         while(running){
+            render = false;
+
             currentTime = System.nanoTime() / BILLION;
             passedTime = currentTime - lastTime;
             lastTime = currentTime;
             unprocessedTime += passedTime;
 
+            frameTime += passedTime;
+
+
+            //TODO Update game
             while(unprocessedTime >= FPS_LIMIT) {
                 unprocessedTime -= FPS_LIMIT;
-                System.out.print(".");
-                //TODO Update game
+                render = true;
+
+                if(frameTime >= 1.0) {
+                    frameTime = 0;
+                    fps = frames;
+                    frames = 0;
+                    System.out.println("FPS: " + fps);
+                }
             }
 
+            //TODO: render game
             if(render) {
-                //TODO: render game
+                frames++;
             }
             else {
                 try {
