@@ -6,6 +6,7 @@ public class SimpleGameEngine implements Runnable {
     private final double FPS_LIMIT = 1.0/60.0;
 
     private WindowSettings windowSettings;
+    private Window window;
 
     public SimpleGameEngine(){
 
@@ -13,6 +14,8 @@ public class SimpleGameEngine implements Runnable {
 
     public void start() {
         windowSettings = new WindowSettings();
+        window = new Window(windowSettings);
+
         gameLoop = new Thread(this);
         gameLoop.run();
     }
@@ -27,10 +30,7 @@ public class SimpleGameEngine implements Runnable {
         final double BILLION = 1000000000.0;
         boolean render = false;
 
-        double currentTime = 0;
-        double lastTime = System.nanoTime() / BILLION;
-        double passedTime = 0;
-        double unprocessedTime = 0;
+        GameTime gameTime = new GameTime();
 
         double frameTime = 0;
         int frames = 0;
@@ -39,29 +39,25 @@ public class SimpleGameEngine implements Runnable {
         while(running){
             render = false;
 
-            currentTime = System.nanoTime() / BILLION;
-            passedTime = currentTime - lastTime;
-            lastTime = currentTime;
-            unprocessedTime += passedTime;
-
-            frameTime += passedTime;
-
+            gameTime.updateTime();
+            frameTime += gameTime.getPassedTime();
 
             //TODO Update game
-            while(unprocessedTime >= FPS_LIMIT) {
-                unprocessedTime -= FPS_LIMIT;
+            while(gameTime.shouldUpdate(FPS_LIMIT)) {
+                gameTime.decrementUnprocessedTime(FPS_LIMIT);
                 render = true;
+                System.out.println("FPS: " + fps);
 
                 if(frameTime >= 1.0) {
                     frameTime = 0;
                     fps = frames;
                     frames = 0;
-                    System.out.println("FPS: " + fps);
                 }
             }
 
             //TODO: render game
             if(render) {
+                window.update();
                 frames++;
             }
             else {
