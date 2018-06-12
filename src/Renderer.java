@@ -1,3 +1,5 @@
+import window.Window;
+
 import java.awt.image.DataBufferInt;
 
 /**

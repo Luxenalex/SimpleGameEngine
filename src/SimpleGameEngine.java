@@ -1,3 +1,6 @@
+import window.Window;
+import window.WindowSettings;
+
 public class SimpleGameEngine implements Runnable {
 
     private Thread gameLoop;
