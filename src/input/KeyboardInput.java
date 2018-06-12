@@ -9,7 +9,7 @@ import java.awt.event.KeyListener;
  */
 public class KeyboardInput implements KeyListener {
     private boolean[] keys = new boolean[NumInputs.KEYS.getvalue()];
-    private boolean[] keysLast = new boolean[NumInputs.KEYS.getvalue()];
+    private boolean[] lastKeys = new boolean[NumInputs.KEYS.getvalue()];
 
     public KeyboardInput(Canvas canvas) {
         canvas.addKeyListener(this);
@@ -21,16 +21,24 @@ public class KeyboardInput implements KeyListener {
     }
 
     @Override
-    public void keyPressed(KeyEvent e) {
-
+    public void keyPressed(KeyEvent event) {
+        keys[event.getKeyCode()] = true;
     }
 
     @Override
-    public void keyReleased(KeyEvent e) {
-
+    public void keyReleased(KeyEvent event) {
+        keys[event.getKeyCode()] = false;
     }
 
-    public boolean getKeys(int index) {
+    public boolean isKey(int index) {
         return keys[index];
+    }
+
+    public void setLastKey(boolean value, int index) {
+        lastKeys[index] = value;
+    }
+
+    public boolean isLastKey(int index) {
+        return lastKeys[index];
     }
 }

@@ -76,4 +76,12 @@ public class Window {
     public int getHeight(){
         return settings.getHeight();
     }
+
+    public Canvas getCanvas() {
+        return canvas;
+    }
+
+    public WindowSettings getSettings() {
+        return settings;
+    }
 }

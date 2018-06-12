@@ -1,5 +1,10 @@
+import com.sun.org.apache.xpath.internal.SourceTree;
+import input.Input;
 import window.Window;
 import window.WindowSettings;
+
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 
 public class SimpleGameEngine implements Runnable {
 
@@ -11,6 +16,7 @@ public class SimpleGameEngine implements Runnable {
     private WindowSettings windowSettings;
     private Window window;
     private Renderer renderer;
+    private Input input;
 
     public SimpleGameEngine(){
     }
@@ -19,6 +25,7 @@ public class SimpleGameEngine implements Runnable {
         windowSettings = new WindowSettings();
         window = new Window(windowSettings);
         renderer = new Renderer(window);
+        input = new Input(window);
 
         gameLoop = new Thread(this);
         gameLoop.run();
@@ -48,8 +55,10 @@ public class SimpleGameEngine implements Runnable {
             while(gameTime.shouldUpdate(TIME_STEP)) {
                 gameTime.decrementUnprocessedTime(TIME_STEP);
                 render = true;
-                System.out.println("FPS: " + fps);
 
+                System.out.println("x: " + input.getMouseX() + " y: " + input.getMouseY());
+
+                input.update();
                 //TODO see if this can bee done better
                 if(frameTime >= 1.0) {
                     frameTime = 0;
