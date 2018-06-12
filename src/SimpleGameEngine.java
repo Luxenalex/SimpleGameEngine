@@ -9,7 +9,6 @@ public class SimpleGameEngine implements Runnable {
     private Window window;
 
     public SimpleGameEngine(){
-
     }
 
     public void start() {
@@ -46,6 +45,7 @@ public class SimpleGameEngine implements Runnable {
                 render = true;
                 System.out.println("FPS: " + fps);
 
+                //TODO see if this can bee done better
                 if(frameTime >= 1.0) {
                     frameTime = 0;
                     fps = frames;
