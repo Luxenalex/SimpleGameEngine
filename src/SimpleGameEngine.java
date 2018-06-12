@@ -7,6 +7,7 @@ public class SimpleGameEngine implements Runnable {
 
     private WindowSettings windowSettings;
     private Window window;
+    private Renderer renderer;
 
     public SimpleGameEngine(){
     }
@@ -14,6 +15,7 @@ public class SimpleGameEngine implements Runnable {
     public void start() {
         windowSettings = new WindowSettings();
         window = new Window(windowSettings);
+        renderer = new Renderer(window);
 
         gameLoop = new Thread(this);
         gameLoop.run();
@@ -55,6 +57,7 @@ public class SimpleGameEngine implements Runnable {
 
             //TODO: render game
             if(render) {
+                renderer.clear();
                 window.update();
                 frames++;
             }

@@ -9,7 +9,7 @@ public class WindowSettings {
 
         this.width = 320;
         this.height = 240;
-        this.scale = 4f;
+        this.scale = 3f;
         this.title = "Best Engine 0.1";
     }
 

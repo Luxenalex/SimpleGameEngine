@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBuffer;
 
 public class Window {
     private JFrame frame;
@@ -9,8 +10,11 @@ public class Window {
     private BufferStrategy bufferStrategy;
     private Canvas canvas;
     private Graphics graphics;
+    private WindowSettings settings;
 
     public Window(WindowSettings settings) {
+
+        this.settings = settings;
 
         image = new BufferedImage(
                 settings.getWidth(),
@@ -37,7 +41,7 @@ public class Window {
         frame.pack();
     }
 
-    public void createCanvas(WindowSettings settings) {
+    private void createCanvas(WindowSettings settings) {
 
         canvas = new Canvas();
         Dimension size = new Dimension(
@@ -57,5 +61,17 @@ public class Window {
         graphics.drawImage(image, 0, 0, canvas.getWidth(),
                            canvas.getHeight(), null);
         bufferStrategy.show();
+    }
+
+    public DataBuffer getImageRasterDataBuffer(){
+        return image.getRaster().getDataBuffer();
+    }
+
+    public int getWidth(){
+        return settings.getWidth();
+    }
+
+    public int getHeight(){
+        return settings.getHeight();
     }
 }
