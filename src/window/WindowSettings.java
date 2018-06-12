@@ -1,3 +1,5 @@
+package window;
+
 public class WindowSettings {
 
     private int width;
