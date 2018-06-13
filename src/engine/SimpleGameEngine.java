@@ -9,7 +9,7 @@ public class SimpleGameEngine implements Runnable {
     private Thread gameLoop;
 
     private boolean running;
-    private final double TIME_STEP = 1.0 / 1.0;
+    private final double TIME_STEP = 1.0 / 60.0;
 
     private WindowSettings windowSettings;
     private Window window;
@@ -70,10 +70,11 @@ public class SimpleGameEngine implements Runnable {
 
             //TODO: render game
             if(render) {
+                window.update();
+                //TODO: This placement MUST be wrong but it works???!!
                 renderer.clear();
                 frames++;
                 System.out.println("rendering");
-                window.update();
             }
             else {
                 try {
