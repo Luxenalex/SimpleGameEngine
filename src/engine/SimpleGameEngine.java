@@ -59,8 +59,6 @@ public class SimpleGameEngine implements Runnable {
                 game.update(this, (float)TIME_STEP);
                 game.render(this, renderer  );
 
-                System.out.println("x: " + input.getMouseX() + " y: " + input.getMouseY());
-
                 input.update();
                 //TODO see if this can bee done better
                 if(frameTime >= 1.0) {
@@ -90,5 +88,9 @@ public class SimpleGameEngine implements Runnable {
 
     public void dispose() {
 
+    }
+
+    public Input getInput() {
+        return input;
     }
 }
