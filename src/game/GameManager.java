@@ -3,13 +3,16 @@ package game;
 import engine.AbstractGame;
 import engine.Renderer;
 import engine.SimpleGameEngine;
+import engine.gfx.Image;
 
 import java.awt.event.KeyEvent;
 
 public class GameManager extends AbstractGame {
 
-    public GameManager(){
+    private Image image;
 
+    public GameManager(){
+        image = new Image("/nekoSensei.png");
     }
 
     @Override
@@ -21,7 +24,11 @@ public class GameManager extends AbstractGame {
 
     @Override
     public void render(SimpleGameEngine gameContainer, Renderer renderer) {
-
+        renderer.drawImage(
+                image,
+                gameContainer.getInput().getMouseX(),
+                gameContainer.getInput().getMouseY()
+        );
     }
 
     public static void main(String args[]){

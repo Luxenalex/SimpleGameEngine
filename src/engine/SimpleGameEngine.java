@@ -9,7 +9,7 @@ public class SimpleGameEngine implements Runnable {
     private Thread gameLoop;
 
     private boolean running;
-    private final double TIME_STEP = 1.0 / 60.0;
+    private final double TIME_STEP = 1.0 / 1.0;
 
     private WindowSettings windowSettings;
     private Window window;
@@ -57,7 +57,7 @@ public class SimpleGameEngine implements Runnable {
                 render = true;
 
                 game.update(this, (float)TIME_STEP);
-                game.render(this, renderer  );
+                game.render(this, renderer);
 
                 input.update();
                 //TODO see if this can bee done better
@@ -71,15 +71,16 @@ public class SimpleGameEngine implements Runnable {
             //TODO: render game
             if(render) {
                 renderer.clear();
-                window.update();
                 frames++;
+                System.out.println("rendering");
+                window.update();
             }
             else {
                 try {
                     Thread.sleep(1);
                 }
                 catch (InterruptedException e) {
-                    e.printStackTrace();
+                    System.err.println("Error: " + e.getMessage());
                 }
             }
         }

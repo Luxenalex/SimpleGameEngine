@@ -1,5 +1,6 @@
 package engine;
 
+import engine.gfx.Image;
 import engine.window.Window;
 
 import java.awt.image.DataBufferInt;
@@ -21,7 +22,28 @@ public class Renderer {
 
     public void clear(){
         for(int i = 0; i < pixels.length; i++){
-            pixels[i] = 0;
+            pixels[i] = 0x000000;
+        }
+    }
+
+    public void setPixel(int x, int y, int value) {
+        if((x < 0 || x >= pixelWidth || y < 0 || y >= pixelHeight) ||
+           value == 0xFFFF00FF) {
+            return;
+        }
+
+        pixels[x + y * pixelWidth] = value;
+    }
+
+    public void drawImage(Image image, int offsetX, int offsetY) {
+        for(int y = 0; y < image.getHeight(); y++) {
+            for(int x = 0; x < image.getWidth(); x++) {
+                setPixel(
+                        x + offsetX,
+                        y + offsetY,
+                        image.getPixels()[x + y * image.getWidth()]
+                );
+            }
         }
     }
 }
