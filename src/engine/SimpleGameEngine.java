@@ -70,11 +70,10 @@ public class SimpleGameEngine implements Runnable {
 
             //TODO: render game
             if(render) {
-                window.update();
-                //TODO: This placement MUST be wrong but it works???!!
                 renderer.clear();
+                game.render(this, renderer);
+                window.update();
                 frames++;
-                System.out.println("rendering");
             }
             else {
                 try {

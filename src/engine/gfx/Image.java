@@ -19,13 +19,13 @@ public class Image {
         }
 
         //TODO Do something better than if-then.
-        //if(image != null) {
+        if(image != null) {
             width = image.getWidth();
             height = image.getHeight();
             pixels = image.getRGB(0, 0, width, height, null, 0, width);
 
             image.flush();
-        //}
+        }
     }
 
     public int getWidth() {
