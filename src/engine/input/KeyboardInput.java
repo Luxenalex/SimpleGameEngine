@@ -1,4 +1,4 @@
-package input;
+package engine.input;
 
 import java.awt.Canvas;
 import java.awt.event.KeyEvent;

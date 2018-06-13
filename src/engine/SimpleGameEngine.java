@@ -1,10 +1,8 @@
-import com.sun.org.apache.xpath.internal.SourceTree;
-import input.Input;
-import window.Window;
-import window.WindowSettings;
+package engine;
 
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
+import engine.input.Input;
+import engine.window.Window;
+import engine.window.WindowSettings;
 
 public class SimpleGameEngine implements Runnable {
 
@@ -17,8 +15,10 @@ public class SimpleGameEngine implements Runnable {
     private Window window;
     private Renderer renderer;
     private Input input;
+    private AbstractGame game;
 
-    public SimpleGameEngine(){
+    public SimpleGameEngine(AbstractGame game){
+        this.game = game;
     }
 
     public void start() {
@@ -56,6 +56,9 @@ public class SimpleGameEngine implements Runnable {
                 gameTime.decrementUnprocessedTime(TIME_STEP);
                 render = true;
 
+                game.update(this, (float)TIME_STEP);
+                game.render(this, renderer  );
+
                 System.out.println("x: " + input.getMouseX() + " y: " + input.getMouseY());
 
                 input.update();
@@ -87,10 +90,5 @@ public class SimpleGameEngine implements Runnable {
 
     public void dispose() {
 
-    }
-
-    public static void main(String args[]) {
-        SimpleGameEngine gameContainer = new SimpleGameEngine();
-        gameContainer.start();
     }
 }

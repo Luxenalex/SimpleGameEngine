@@ -1,3 +1,5 @@
+package engine;
+
 public class GameTime {
     final double BILLION = 1000000000.0;
 

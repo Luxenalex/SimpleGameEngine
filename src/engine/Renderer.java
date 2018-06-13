@@ -1,4 +1,6 @@
-import window.Window;
+package engine;
+
+import engine.window.Window;
 
 import java.awt.image.DataBufferInt;
 

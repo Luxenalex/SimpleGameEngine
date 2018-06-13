@@ -1,4 +1,4 @@
-package input;
+package engine.input;
 
 public enum NumInputs {
     KEYS (256),

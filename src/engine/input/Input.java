@@ -1,6 +1,6 @@
-package input;
+package engine.input;
 
-import window.Window;
+import engine.window.Window;
 
 public class Input {
     private KeyboardInput keyboard;

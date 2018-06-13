@@ -1,4 +1,4 @@
-package window;
+package engine.window;
 
 import javax.swing.*;
 import java.awt.*;

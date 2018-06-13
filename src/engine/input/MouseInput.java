@@ -1,7 +1,7 @@
-package input;
+package engine.input;
 
-import window.Window;
-import window.WindowSettings;
+import engine.window.Window;
+import engine.window.WindowSettings;
 
 import java.awt.event.*;
 import java.awt.Canvas;

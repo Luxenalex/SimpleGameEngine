@@ -1,4 +1,4 @@
-package window;
+package engine.window;
 
 public class WindowSettings {
 
