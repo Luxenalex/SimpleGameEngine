@@ -37,10 +37,13 @@ public class Window {
         frame.setLayout(new BorderLayout());
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
-        frame.setVisible(true);
 
         frame.add(canvas, BorderLayout.CENTER);
         frame.pack();
+    }
+
+    public void setVisible(boolean value){
+        frame.setVisible(value);
     }
 
     private void createCanvas(WindowSettings settings) {
@@ -79,9 +82,5 @@ public class Window {
 
     public Canvas getCanvas() {
         return canvas;
-    }
-
-    public WindowSettings getSettings() {
-        return settings;
     }
 }

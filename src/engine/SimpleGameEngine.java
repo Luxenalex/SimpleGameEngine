@@ -21,21 +21,25 @@ public class SimpleGameEngine implements Runnable {
         this.game = game;
     }
 
-    public void start() {
+    public void start(String name) {
         windowSettings = new WindowSettings();
         window = new Window(windowSettings);
         renderer = new Renderer(window);
         input = new Input(window.getCanvas(), windowSettings);
 
-        gameLoop = new Thread(this);
-        gameLoop.run();
+        gameLoop = new Thread(this, name);
+        gameLoop.start();
     }
 
     public void stop() {
 
     }
 
+    @Override
     public void run() {
+
+        window.setVisible(true);
+
         running = true;
 
         boolean render;
@@ -51,7 +55,6 @@ public class SimpleGameEngine implements Runnable {
             gameTime.updateTime();
             frameTime += gameTime.getPassedTime();
 
-            //TODO Update game
             while(gameTime.shouldUpdate(TIME_STEP)) {
                 gameTime.decrementUnprocessedTime(TIME_STEP);
                 render = true;
@@ -68,7 +71,6 @@ public class SimpleGameEngine implements Runnable {
                 }
             }
 
-            //TODO: render game
             if(render) {
                 renderer.clear();
                 game.render(this, renderer);
