@@ -10,13 +10,13 @@ import java.awt.image.DataBufferInt;
  */
 public class Renderer {
 
-    private int pixelWidth;
-    private int pixelHeight;
+    private int canvasWidth;
+    private int canvasHeight;
     private int[] pixels;
 
     public Renderer(Window window){
-        pixelWidth = window.getWidth();
-        pixelHeight = window.getHeight();
+        canvasWidth = window.getWidth();
+        canvasHeight = window.getHeight();
         pixels = ((DataBufferInt)window.getImageRasterDataBuffer()).getData();
     }
 
@@ -27,17 +27,41 @@ public class Renderer {
     }
 
     public void setPixel(int x, int y, int value) {
-        if((x < 0 || x >= pixelWidth || y < 0 || y >= pixelHeight) ||
+        if((x < 0 || x >= canvasWidth || y < 0 || y >= canvasHeight) ||
            value == 0xFFFF00FF) {
             return;
         }
 
-        pixels[x + y * pixelWidth] = value;
+        pixels[x + y * canvasWidth] = value;
     }
 
     public void drawImage(Image image, int offsetX, int offsetY) {
-        for(int y = 0; y < image.getHeight(); y++) {
-            for(int x = 0; x < image.getWidth(); x++) {
+        int startX = 0;
+        int startY = 0;
+        int imageWidth = image.getWidth();
+        int imageHeight = image.getHeight();
+
+        if(offsetX < -imageWidth || offsetY < -imageHeight ||
+                offsetX >= canvasWidth || offsetY >= canvasHeight) {
+            return;
+        }
+
+        if(offsetX < 0){
+            startX -= offsetX;
+        }
+        if(offsetY < 0){
+            startY -= offsetY;
+        }
+
+        if(imageWidth + offsetX >= canvasWidth){
+            imageWidth -= imageWidth + offsetX - canvasWidth;
+        }
+        if (imageHeight + offsetY >= canvasHeight){
+            imageHeight -= imageHeight + offsetY - canvasHeight;
+        }
+
+        for(int y = startY; y < imageHeight; y++) {
+            for(int x = startX; x < imageWidth; x++) {
                 setPixel(
                         x + offsetX,
                         y + offsetY,
