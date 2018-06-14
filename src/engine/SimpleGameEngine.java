@@ -25,7 +25,7 @@ public class SimpleGameEngine implements Runnable {
         windowSettings = new WindowSettings();
         window = new Window(windowSettings);
         renderer = new Renderer(window);
-        input = new Input(window);
+        input = new Input(window.getCanvas(), windowSettings);
 
         gameLoop = new Thread(this);
         gameLoop.run();

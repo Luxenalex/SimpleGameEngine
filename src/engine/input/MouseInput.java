@@ -1,11 +1,9 @@
 package engine.input;
 
-import engine.window.Window;
 import engine.window.WindowSettings;
 
 import java.awt.event.*;
 import java.awt.Canvas;
-
 
 public class MouseInput implements
         MouseListener, MouseMotionListener, MouseWheelListener {
@@ -19,14 +17,13 @@ public class MouseInput implements
     private int mouseY = 0;
     private int scroll = 0;
 
-    public MouseInput(Window window) {
+    public MouseInput(Canvas canvas, WindowSettings windowSettings) {
 
-        Canvas canvas = window.getCanvas();
         canvas.addMouseListener(this);
         canvas.addMouseMotionListener(this);
         canvas.addMouseWheelListener(this);
 
-        this.windowSettings = window.getSettings();
+        this.windowSettings = windowSettings;
     }
 
     @Override

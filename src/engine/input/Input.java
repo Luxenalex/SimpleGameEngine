@@ -1,14 +1,16 @@
 package engine.input;
 
-import engine.window.Window;
+import engine.window.WindowSettings;
+
+import java.awt.Canvas;
 
 public class Input {
     private KeyboardInput keyboard;
     private MouseInput mouse;
 
-public Input(Window window){
-    keyboard = new KeyboardInput(window.getCanvas());
-    mouse = new MouseInput(window);
+public Input(Canvas canvas, WindowSettings windowSettings){
+    keyboard = new KeyboardInput(canvas);
+    mouse = new MouseInput(canvas, windowSettings);
     }
 
     public void update() {
