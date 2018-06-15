@@ -33,4 +33,8 @@ public class Image {
     public int[] getPixels() {
         return pixels;
     }
+
+    public int getPixelColor(int index) {
+        return pixels[index];
+    }
 }

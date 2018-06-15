@@ -59,7 +59,7 @@ public class Window {
         canvas.setMaximumSize(size);
 
         createFrame(settings);
-        canvas.createBufferStrategy(2);
+        canvas.createBufferStrategy(3);
     }
 
     public void update(){
