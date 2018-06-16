@@ -38,9 +38,10 @@ public class SimpleGameEngine implements Runnable {
     @Override
     public void run() {
 
-        window.setVisible(true);
+        if(running) return;
 
         running = true;
+        window.setVisible(true);
 
         boolean render;
         GameTime gameTime = new GameTime();
@@ -74,6 +75,7 @@ public class SimpleGameEngine implements Runnable {
             if(render) {
                 renderer.clear();
                 game.render(this, renderer);
+                renderer.drawText("FPS: " + fps, 5, 5, 0xFFFFFFFF);
                 window.update();
                 frames++;
             }

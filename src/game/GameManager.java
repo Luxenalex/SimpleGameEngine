@@ -16,15 +16,15 @@ public class GameManager extends AbstractGame {
     float temp = 0;
 
     public GameManager() throws IllegalArgumentException, IOException {
-        image = new Image("/spriteSheet.png");
+        image = new TileSheet("/spriteSheet.png", 24, 24);
     }
 
     @Override
     public void update(SimpleGameEngine gameContainer, float deltaTime) {
 
         // For testing animation.
-        temp += deltaTime * 20;
-        if(temp > 3) {
+        temp += deltaTime * 12;
+        if(temp > 7) {
             temp = 0;
         }
     }
