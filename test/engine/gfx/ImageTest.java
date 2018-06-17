@@ -67,11 +67,6 @@ public class ImageTest {
         assertEquals(16, image.getHeight());
     }
 
-    @Test
-    public void shouldHave2x16Pixels() {
-        assertEquals(2*16, image.getPixels().length);
-    }
-
     @Test (expected = IllegalArgumentException.class)
     public void imageShouldNotExist() throws IllegalArgumentException, IOException {
         new Image("/shouldNotExist.png");
@@ -79,8 +74,13 @@ public class ImageTest {
 
     @Test
     public void imageShouldHaveCorrectColors() {
+
         int[] colors = getOriginalColors();
-        assertArrayEquals(colors, image.getPixels());
+        for(int y = 0; y < image.getHeight(); y++) {
+            for(int x = 0; x < image.getWidth(); x++) {
+                assertEquals(colors[x + y * image.getWidth()], image.getColor(x, y));
+            }
+        }
     }
 
     @Test
