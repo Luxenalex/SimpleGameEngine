@@ -5,9 +5,6 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 
-/**
- * Created by lux on 6/14/18.
- */
 public class WindowTest {
 
     private Window window;
