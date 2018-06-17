@@ -20,7 +20,7 @@ public class Renderer {
         canvasHeight = window.getHeight();
         pixels = ((DataBufferInt)window.getImageRasterDataBuffer()).getData();
         try {
-            font = new Font(Font.DEFAULT);
+            font = new Font(Font.DEFAULT, 59);
         }
         catch(IOException error) {
             System.err.println("Could not load default font: " + error.getMessage());
@@ -51,14 +51,14 @@ public class Renderer {
         for(int i = 0; i < text.length(); i++) {
             int unicode = text.codePointAt(i) - asciiPositionsToSkipOver;
 
-            for(int y = 0; y < fontImage.getHeight(); y++) {
+            for(int y = 1; y < fontImage.getHeight(); y++) {
                 for(int x = 0; x < font.getWidths()[unicode]; x++) {
                     if(fontImage.getPixels()[(x + font.getOffsets()[unicode]) +
                                              y * font.getFontImage().getWidth()]
                        == 0xFFFFFFFF) {
                         setPixel(
                                 x + offsetX + letterOffset,
-                                y + offsetY,
+                                y - 1 + offsetY,
                                 color
                         );
                     }
@@ -115,7 +115,7 @@ public class Renderer {
                 setPixel(
                         x + offsetX,
                         y + offsetY,
-                        image.getPixelColor((x + modifierX) + (y + modifierY) * image.getWidth())
+                        image.getColor(x + modifierX, y + modifierY)
                         );
             }
         }
@@ -128,5 +128,8 @@ public class Renderer {
     private boolean isOutsideOfCanvas(Image image, int offsetX, int offsetY) {
         return offsetX < -image.getWidth() || offsetY < -image.getHeight() ||
                offsetX >= canvasWidth || offsetY >= canvasHeight;
+    }
+    public int getFontHeight() {
+        return font.getHeight();
     }
 }
