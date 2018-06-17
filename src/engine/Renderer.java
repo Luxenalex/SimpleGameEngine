@@ -49,13 +49,12 @@ public class Renderer {
         text = text.toUpperCase();
 
         for(int i = 0; i < text.length(); i++) {
-            int unicode = text.codePointAt(i) - asciiPositionsToSkipOver;
+            int character = text.codePointAt(i) - asciiPositionsToSkipOver;
 
             for(int y = 1; y < fontImage.getHeight(); y++) {
-                for(int x = 0; x < font.getWidths()[unicode]; x++) {
-                    if(fontImage.getPixels()[(x + font.getOffsets()[unicode]) +
-                                             y * font.getFontImage().getWidth()]
-                       == 0xFFFFFFFF) {
+                for(int x = 0; x < font.getCharacterWidth(character); x++) {
+                    if(fontImage.getColor(x + font.getCharacterOffset(character), y)
+                       != 0xFFFF00FF) {
                         setPixel(
                                 x + offsetX + letterOffset,
                                 y - 1 + offsetY,
@@ -64,7 +63,7 @@ public class Renderer {
                     }
                 }
             }
-            letterOffset += font.getWidths()[unicode];
+            letterOffset += font.getCharacterWidth(character);
         }
     }
 
