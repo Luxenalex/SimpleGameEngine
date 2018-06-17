@@ -1,7 +1,5 @@
 package engine.gfx;
 
-import java.io.IOException;
-
 public class Font {
 
     public static final String DEFAULT = "/fonts/font.png";
@@ -10,29 +8,41 @@ public class Font {
     private int[] offsets;
     private int[] widths;
 
-    public Font(String path, int numCharacters)
-            throws IOException, IllegalArgumentException{
+    public Font(String path) {
 
         if(path == null) {
             path = DEFAULT;
         }
         fontImage = new Image(path);
 
+        int numCharacters = getNumCharactersInFont();
         offsets = new int[numCharacters];
         widths = new int[numCharacters];
 
         int index = 0;
-
         for(int i = 0; i < fontImage.getWidth(); i++){
             if(fontImage.getColor(i, 0) == 0xFF00FF00){
                 offsets[index] = i;
             }
-
             if(fontImage.getColor(i, 0) == 0xFF0000FF){
                 widths[index] = i + 1 - offsets[index];
                 index++;
             }
         }
+    }
+
+    private int getNumCharactersInFont() {
+        int numCharacters = 0;
+
+        for(int i = 0; i < fontImage.getWidth(); i++) {
+            if(fontImage.getColor(i, 0) == 0xFF00FF00){
+                numCharacters++;
+            }
+        }
+        if(numCharacters == 0) {
+            numCharacters++;
+        }
+        return numCharacters;
     }
 
     public Image getFontImage() {

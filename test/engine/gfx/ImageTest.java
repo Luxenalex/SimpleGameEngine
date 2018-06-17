@@ -5,50 +5,48 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-import java.io.IOException;
-
 public class ImageTest {
     private Image image;
 
     @Before
-    public void setup() throws IOException, IllegalArgumentException {
+    public void setup() {
         image = new Image("/testColors.png");
     }
 
     private int[] getOriginalColors() {
         return new int[] {
-                0xFFFFFFFF,
-                0xFFFFFFFF, //First FF is for alpha.
-                0xFF0000FF,
-                0xFF0000FF,
-                0xFFFFFFFF,
-                0xFFFFFFFF,
-                0xFF00FFFF,
-                0xFF00FFFF,
-                0xFFFFFFFF,
-                0xFFFFFFFF,
-                0xFFFF00FF,
-                0xFFFF00FF,
-                0xFFFFFFFF,
-                0xFFFFFFFF,
-                0xFF000000,
-                0xFF000000,
-                0xFFFFFFFF,
-                0xFFFFFFFF,
-                0xFF00FF00,
-                0xFF00FF00,
-                0xFFFFFFFF,
-                0xFFFFFFFF,
-                0xFFFFFF00,
-                0xFFFFFF00,
-                0xFFFFFFFF,
-                0xFFFFFFFF,
-                0xFFFF0000,
-                0xFFFF0000,
-                0xFFFFFFFF,
-                0xFFFFFFFF,
-                0xFF808080,
-                0xFF808080
+            0xFFFFFFFF,
+            0xFFFFFFFF, //First FF is for alpha.
+            0xFF0000FF,
+            0xFF0000FF,
+            0xFFFFFFFF,
+            0xFFFFFFFF,
+            0xFF00FFFF,
+            0xFF00FFFF,
+            0xFFFFFFFF,
+            0xFFFFFFFF,
+            0xFFFF00FF,
+            0xFFFF00FF,
+            0xFFFFFFFF,
+            0xFFFFFFFF,
+            0xFF000000,
+            0xFF000000,
+            0xFFFFFFFF,
+            0xFFFFFFFF,
+            0xFF00FF00,
+            0xFF00FF00,
+            0xFFFFFFFF,
+            0xFFFFFFFF,
+            0xFFFFFF00,
+            0xFFFFFF00,
+            0xFFFFFFFF,
+            0xFFFFFFFF,
+            0xFFFF0000,
+            0xFFFF0000,
+            0xFFFFFFFF,
+            0xFFFFFFFF,
+            0xFF808080,
+            0xFF808080
         };
     }
 
@@ -67,8 +65,8 @@ public class ImageTest {
         assertEquals(16, image.getHeight());
     }
 
-    @Test (expected = IllegalArgumentException.class)
-    public void imageShouldNotExist() throws IllegalArgumentException, IOException {
+    @Test
+    public void shouldLogToStandardErr() {
         new Image("/shouldNotExist.png");
     }
 

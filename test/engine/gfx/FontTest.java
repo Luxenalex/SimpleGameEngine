@@ -13,7 +13,7 @@ public class FontTest {
 
     @Before
     public void setup() throws IOException, IllegalArgumentException {
-        font = new Font("/testFont.png", 5);
+        font = new Font("/testFont.png");
     }
 
     @After

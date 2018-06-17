@@ -1,17 +1,14 @@
 package engine.gfx;
 
-import java.io.IOException;
-
 public class TileSheet extends Image {
 
     public int tileWidth;
     public int tileHeight;
 
-    public TileSheet(String path, int width, int height)
-            throws IOException, IllegalArgumentException {
-            super(path);
-            this.tileWidth = width;
-            this.tileHeight = height;
+    public TileSheet(String path, int width, int height) {
+        super(path);
+        this.tileWidth = super.getWidth() > width ? width : super.getWidth();
+        this.tileHeight = super.getHeight() > height ? height : super.getHeight();
     }
 
     public int getTileWidth() {

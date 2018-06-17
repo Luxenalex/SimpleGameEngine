@@ -6,7 +6,6 @@ import engine.gfx.TileSheet;
 import engine.window.Window;
 
 import java.awt.image.DataBufferInt;
-import java.io.IOException;
 
 public class Renderer {
 
@@ -15,16 +14,13 @@ public class Renderer {
     private int[] pixels;
     private Font font;
 
+
     public Renderer(Window window){
         canvasWidth = window.getWidth();
         canvasHeight = window.getHeight();
         pixels = ((DataBufferInt)window.getImageRasterDataBuffer()).getData();
-        try {
-            font = new Font(Font.DEFAULT, 59);
-        }
-        catch(IOException error) {
-            System.err.println("Could not load default font: " + error.getMessage());
-        }
+
+        font = new Font(Font.DEFAULT);
     }
 
     public void clear(){
@@ -56,9 +52,9 @@ public class Renderer {
                     if(fontImage.getColor(x + font.getCharacterOffset(character), y)
                        != 0xFFFF00FF) {
                         setPixel(
-                                x + offsetX + letterOffset,
-                                y - 1 + offsetY,
-                                color
+                            x + offsetX + letterOffset,
+                            y - 1 + offsetY,
+                            color
                         );
                     }
                 }
