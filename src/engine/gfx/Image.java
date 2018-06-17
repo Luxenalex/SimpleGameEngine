@@ -22,6 +22,10 @@ public class Image {
         }
     }
 
+    public int getColor(int x, int y) {
+        return pixels[x + y * width];
+    }
+
     public int getWidth() {
         return width;
     }
