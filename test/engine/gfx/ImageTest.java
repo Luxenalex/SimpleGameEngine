@@ -1,22 +1,18 @@
 package engine.gfx;
 
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
-
-import static org.junit.Assert.*;
 
 public class ImageTest {
     private Image image;
 
     @Before
-    public void setup() {
-
-        try {
-            image = new Image("/testColors.png");
-        } catch (IOException e) {
-            System.err.println("Failed to create image at setup");
-        }
+    public void setup() throws IOException, IllegalArgumentException {
+        image = new Image("/testColors.png");
     }
 
     private int[] getOriginalColors() {
