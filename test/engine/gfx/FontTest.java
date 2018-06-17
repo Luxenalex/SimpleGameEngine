@@ -32,13 +32,19 @@ public class FontTest {
     @Test
     public void shouldGetCorrectFontOffset() {
         int[] offsets = getOriginalOffsets();
-        assertArrayEquals(offsets, font.getOffsets());
+
+        for(int i = 0; i < offsets.length; i++) {
+            assertEquals(offsets[i], font.getCharacterOffset(i));
+        }
     }
 
     @Test
     public void shouldGetCorrectWidths() {
         int[] widths = getOriginalWidths();
-        assertArrayEquals(widths, font.getWidths());
+
+        for(int i = 0; i < widths.length; i++) {
+            assertEquals(widths[i], font.getCharacterWidth(i));
+        }
     }
 
     @Test
