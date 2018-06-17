@@ -39,15 +39,23 @@ public class Font {
         return fontImage;
     }
 
+    public int getHeight() {
+        return fontImage.getHeight() - 1;
+    }
+
+    public int getCharacterWidth(int character) {
+        return widths[character];
+    }
+
+    public int getCharacterOffset(int character) {
+        return offsets[character];
+    }
+
     public int[] getOffsets() {
         return offsets;
     }
 
     public int[] getWidths() {
         return widths;
-    }
-
-    public int getHeight() {
-        return fontImage.getHeight() - 1;
     }
 }
