@@ -38,10 +38,10 @@ public class Image {
     private InputStream getImageInputStream(String path) {
         InputStream imageStream = Image.class.getResourceAsStream(path);
         if(imageStream == null) {
-            EngineLogger.LOGGER.warning("Could not read image " + path);
+            EngineLogger.LOGGER.warning("Could not read image " + path + ".");
             imageStream = Image.class.getResourceAsStream("/missingImage.png");
             if(imageStream == null) {
-                EngineLogger.LOGGER.severe("Could not read placeholder image");
+                EngineLogger.LOGGER.severe("Could not read placeholder image.");
                 System.exit(-1);
             }
         }
