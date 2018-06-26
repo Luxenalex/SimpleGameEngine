@@ -48,6 +48,9 @@ public class GameManager extends AbstractGame {
                 (int)temp,
                 0
         );
+
+        //renderer.drawFilledRectangle(gameContainer.getInput().getMouseX() - 16,
+           //     gameContainer.getInput().getMouseY() - 16, 32, 32, 0xffffccff);
     }
 
     public static void main(String args[]){

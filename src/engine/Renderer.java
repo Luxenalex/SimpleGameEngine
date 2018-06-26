@@ -31,10 +31,14 @@ public class Renderer {
 
     public void setPixel(int x, int y, int value) {
         if((x < 0 || x >= canvasWidth || y < 0 || y >= canvasHeight) ||
-           value == 0xFFFF00FF) {
+                isAlpha(value)) {
             return;
         }
         pixels[x + y * canvasWidth] = value;
+    }
+
+    private boolean isAlpha(int value){
+        return ((value >> 24) & 0xff) == 0;
     }
 
     public void drawText(String text, int offsetX, int offsetY, int color) {
@@ -49,8 +53,7 @@ public class Renderer {
 
             for(int y = 1; y < fontImage.getHeight(); y++) {
                 for(int x = 0; x < font.getCharacterWidth(character); x++) {
-                    if(fontImage.getColor(x + font.getCharacterOffset(character), y)
-                       != 0xFFFF00FF) {
+                    if(!isAlpha(fontImage.getColor(x + font.getCharacterOffset(character), y))) {
                         setPixel(
                             x + offsetX + letterOffset,
                             y - 1 + offsetY,
@@ -124,7 +127,56 @@ public class Renderer {
         return offsetX < -image.getWidth() || offsetY < -image.getHeight() ||
                offsetX >= canvasWidth || offsetY >= canvasHeight;
     }
+
+    private boolean isOutsideOfCanvas(int width, int height, int offsetX, int offsetY) {
+        return offsetX < -width || offsetY < -height ||
+                offsetX >= canvasWidth || offsetY >= canvasHeight;
+    }
+
     public int getFontHeight() {
         return font.getHeight();
     }
+
+    public void drawRectangle(int offsetX, int offsetY, int width, int height, int color){
+        for(int y = 0; y <= height; y++){
+            setPixel(offsetX, y + offsetY, color);
+            setPixel(offsetX + width, y + offsetY, color);
+        }
+
+        for(int x = 0; x <= width; x++){
+            setPixel(x + offsetX, offsetY, color);
+            setPixel(x + offsetX, offsetY + height, color);
+        }
+    }
+
+    public void drawFilledRectangle(int offsetX, int offsetY, int width, int height, int color){
+
+        if(isOutsideOfCanvas(width, height, offsetX, offsetY)){
+            return;
+        }
+
+        int startX = 0;
+        int startY = 0;
+
+        if(offsetX < 0){
+            startX = reduceAreaToDraw(startX, offsetX);
+        }
+        if(offsetY < 0){
+            startY = reduceAreaToDraw(startY, offsetY);
+        }
+
+        if(width + offsetX >= canvasWidth){
+            width = reduceAreaToDraw(width, width + offsetX - canvasWidth);
+        }
+        if (height + offsetY >= canvasHeight){
+            height = reduceAreaToDraw(height, height + offsetY - canvasHeight);
+        }
+
+        for(int y = startY; y <= height; y++){
+            for (int x = startX; x <= width; x++){
+                setPixel(x + offsetX, y + offsetY, color);
+            }
+        }
+    }
+
 }
