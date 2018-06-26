@@ -1,9 +1,8 @@
 package engine.gfx;
 
-import org.junit.*;
-
-import java.io.IOException;
-
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class ImageTest {
@@ -11,48 +10,43 @@ public class ImageTest {
 
     @Before
     public void setup() {
-
-        try {
-            image = new Image("/testColors.png");
-        } catch (IOException e) {
-            System.err.println("Failed to create image at setup");
-        }
+        image = new Image("/testColors.png");
     }
 
     private int[] getOriginalColors() {
         return new int[] {
-                0xFFFFFFFF,
-                0xFFFFFFFF, //First FF is for alpha.
-                0xFF0000FF,
-                0xFF0000FF,
-                0xFFFFFFFF,
-                0xFFFFFFFF,
-                0xFF00FFFF,
-                0xFF00FFFF,
-                0xFFFFFFFF,
-                0xFFFFFFFF,
-                0xFFFF00FF,
-                0xFFFF00FF,
-                0xFFFFFFFF,
-                0xFFFFFFFF,
-                0xFF000000,
-                0xFF000000,
-                0xFFFFFFFF,
-                0xFFFFFFFF,
-                0xFF00FF00,
-                0xFF00FF00,
-                0xFFFFFFFF,
-                0xFFFFFFFF,
-                0xFFFFFF00,
-                0xFFFFFF00,
-                0xFFFFFFFF,
-                0xFFFFFFFF,
-                0xFFFF0000,
-                0xFFFF0000,
-                0xFFFFFFFF,
-                0xFFFFFFFF,
-                0xFF808080,
-                0xFF808080
+            0xFFFFFFFF,
+            0xFFFFFFFF, //First FF is for alpha.
+            0xFF0000FF,
+            0xFF0000FF,
+            0xFFFFFFFF,
+            0xFFFFFFFF,
+            0xFF00FFFF,
+            0xFF00FFFF,
+            0xFFFFFFFF,
+            0xFFFFFFFF,
+            0xFFFF00FF,
+            0xFFFF00FF,
+            0xFFFFFFFF,
+            0xFFFFFFFF,
+            0xFF000000,
+            0xFF000000,
+            0xFFFFFFFF,
+            0xFFFFFFFF,
+            0xFF00FF00,
+            0xFF00FF00,
+            0xFFFFFFFF,
+            0xFFFFFFFF,
+            0xFFFFFF00,
+            0xFFFFFF00,
+            0xFFFFFFFF,
+            0xFFFFFFFF,
+            0xFFFF0000,
+            0xFFFF0000,
+            0xFFFFFFFF,
+            0xFFFFFFFF,
+            0xFF808080,
+            0xFF808080
         };
     }
 
@@ -72,19 +66,19 @@ public class ImageTest {
     }
 
     @Test
-    public void shouldHave2x16Pixels() {
-        assertEquals(2*16, image.getPixels().length);
-    }
-
-    @Test (expected = IllegalArgumentException.class)
-    public void imageShouldNotExist() throws IllegalArgumentException, IOException {
+    public void shouldLogToStandardErr() {
         new Image("/shouldNotExist.png");
     }
 
     @Test
     public void imageShouldHaveCorrectColors() {
+
         int[] colors = getOriginalColors();
-        assertArrayEquals(colors, image.getPixels());
+        for(int y = 0; y < image.getHeight(); y++) {
+            for(int x = 0; x < image.getWidth(); x++) {
+                assertEquals(colors[x + y * image.getWidth()], image.getColor(x, y));
+            }
+        }
     }
 
     @Test

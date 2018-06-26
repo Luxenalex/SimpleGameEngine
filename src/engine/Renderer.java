@@ -6,7 +6,6 @@ import engine.gfx.TileSheet;
 import engine.window.Window;
 
 import java.awt.image.DataBufferInt;
-import java.io.IOException;
 
 public class Renderer {
 
@@ -15,16 +14,13 @@ public class Renderer {
     private int[] pixels;
     private Font font;
 
+
     public Renderer(Window window){
         canvasWidth = window.getWidth();
         canvasHeight = window.getHeight();
         pixels = ((DataBufferInt)window.getImageRasterDataBuffer()).getData();
-        try {
-            font = new Font(Font.DEFAULT);
-        }
-        catch(IOException error) {
-            System.err.println("Could not load default font: " + error.getMessage());
-        }
+
+        font = new Font(Font.DEFAULT);
     }
 
     public void clear(){
@@ -49,22 +45,21 @@ public class Renderer {
         text = text.toUpperCase();
 
         for(int i = 0; i < text.length(); i++) {
-            int unicode = text.codePointAt(i) - asciiPositionsToSkipOver;
+            int character = text.codePointAt(i) - asciiPositionsToSkipOver;
 
-            for(int y = 0; y < fontImage.getHeight(); y++) {
-                for(int x = 0; x < font.getWidths()[unicode]; x++) {
-                    if(fontImage.getPixels()[(x + font.getOffsets()[unicode]) +
-                                             y * font.getFontImage().getWidth()]
-                       == 0xFFFFFFFF) {
+            for(int y = 1; y < fontImage.getHeight(); y++) {
+                for(int x = 0; x < font.getCharacterWidth(character); x++) {
+                    if(fontImage.getColor(x + font.getCharacterOffset(character), y)
+                       != 0xFFFF00FF) {
                         setPixel(
-                                x + offsetX + letterOffset,
-                                y + offsetY,
-                                color
+                            x + offsetX + letterOffset,
+                            y - 1 + offsetY,
+                            color
                         );
                     }
                 }
             }
-            letterOffset += font.getWidths()[unicode];
+            letterOffset += font.getCharacterWidth(character);
         }
     }
 
@@ -115,7 +110,7 @@ public class Renderer {
                 setPixel(
                         x + offsetX,
                         y + offsetY,
-                        image.getPixelColor((x + modifierX) + (y + modifierY) * image.getWidth())
+                        image.getColor(x + modifierX, y + modifierY)
                         );
             }
         }
@@ -128,5 +123,8 @@ public class Renderer {
     private boolean isOutsideOfCanvas(Image image, int offsetX, int offsetY) {
         return offsetX < -image.getWidth() || offsetY < -image.getHeight() ||
                offsetX >= canvasWidth || offsetY >= canvasHeight;
+    }
+    public int getFontHeight() {
+        return font.getHeight();
     }
 }

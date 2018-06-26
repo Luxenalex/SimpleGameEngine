@@ -6,8 +6,6 @@ import engine.SimpleGameEngine;
 import engine.gfx.Image;
 import engine.gfx.TileSheet;
 
-import java.io.IOException;
-
 public class GameManager extends AbstractGame {
 
     private Image image;
@@ -15,7 +13,7 @@ public class GameManager extends AbstractGame {
 
     float temp = 0;
 
-    public GameManager() throws IllegalArgumentException, IOException {
+    public GameManager() {
         image = new TileSheet("/spriteSheet.png", 24, 24);
     }
 
@@ -43,13 +41,10 @@ public class GameManager extends AbstractGame {
     }
 
     public static void main(String args[]){
+        EngineLogger.initializeLogger("SimpleGameEngine.log");
         SimpleGameEngine gameEngine;
-        try {
-            gameEngine = new SimpleGameEngine(new GameManager());
-            gameEngine.start("SimpleGameEngine");
-        }
-        catch (IOException error) {
-            System.err.println("Error: " + error.getMessage());
-        }
+
+        gameEngine = new SimpleGameEngine(new GameManager());
+        gameEngine.start("SimpleGameEngine");
     }
 }
