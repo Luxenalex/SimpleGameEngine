@@ -3,10 +3,10 @@ package engine;
 public class GameTime {
     final double BILLION = 1000000000.0;
 
-    double currentTime = 0;
-    double lastTime = System.nanoTime() / BILLION;
-    double passedTime = 0;
-    double unprocessedTime = 0;
+    private double currentTime = 0;
+    private double lastTime = System.nanoTime() / BILLION;
+    private double passedTime = 0;
+    private double unprocessedTime = 0;
 
     public GameTime() {
 

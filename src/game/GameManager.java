@@ -14,7 +14,7 @@ public class GameManager extends AbstractGame {
     float temp = 0;
 
     public GameManager() {
-        image = new TileSheet("/spritelSheet.png", 24, 24);
+        image = new TileSheet("/spriteSheet.png", 24, 24);
     }
 
     @Override
