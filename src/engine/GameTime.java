@@ -9,7 +9,6 @@ public class GameTime {
     private double unprocessedTime = 0;
 
     public GameTime() {
-
     }
 
     public void updateTime() {
