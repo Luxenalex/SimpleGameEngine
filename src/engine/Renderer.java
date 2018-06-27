@@ -12,6 +12,8 @@ public class Renderer {
     private int canvasWidth;
     private int canvasHeight;
     private int[] pixels;
+    private int[] zBuffer;
+    private int zDepth = 0;
     private Font font;
 
 
@@ -19,6 +21,7 @@ public class Renderer {
         canvasWidth = window.getWidth();
         canvasHeight = window.getHeight();
         pixels = ((DataBufferInt)window.getImageRasterDataBuffer()).getData();
+        zBuffer = new int[pixels.length];
 
         font = new Font(Font.DEFAULT);
     }
@@ -26,19 +29,32 @@ public class Renderer {
     public void clear(){
         for(int i = 0; i < pixels.length; i++){
             pixels[i] = 0;
+            zBuffer[i] = 0;
         }
     }
 
     public void setPixel(int x, int y, int value) {
+
+        int alpha = ((value >> 24) & 0xff);
         if((x < 0 || x >= canvasWidth || y < 0 || y >= canvasHeight) ||
-                isAlpha(value)) {
+           alpha == 0) {
             return;
         }
-        pixels[x + y * canvasWidth] = value;
-    }
+        if(zBuffer[x + y * canvasWidth] > zDepth) {
+            return;
+        }
+        if(alpha == 255) {
+            pixels[x + y * canvasWidth] = value;
+        }
+        else {
+            int color = pixels[x + y * canvasWidth];
 
-    private boolean isAlpha(int value){
-        return ((value >> 24) & 0xff) == 0;
+            int blendedRed = (color >> 16) & 0xff - (int)(((color >> 16) & 0xff - (value >> 16) & 0xff) * (alpha / 255f));
+            int blendedGreen = (color >> 8) & 0xff - (int)(((color >> 8) & 0xff - (value >> 8) & 0xff) * (alpha / 255f));
+            int blendedBlue = color & 0xff - (int)((color & 0xff - value & 0xff) * (alpha / 255f));
+
+            pixels[x + y * canvasWidth] = (255 << 24 | blendedRed << 16 | blendedGreen << 8 | blendedBlue);
+        }
     }
 
     public void drawText(String text, int offsetX, int offsetY, int color) {
@@ -53,7 +69,8 @@ public class Renderer {
 
             for(int y = 1; y < fontImage.getHeight(); y++) {
                 for(int x = 0; x < font.getCharacterWidth(character); x++) {
-                    if(!isAlpha(fontImage.getColor(x + font.getCharacterOffset(character), y))) {
+                    // Sets pixel if color does not have full alpha
+                    if((((fontImage.getColor(x + font.getCharacterOffset(character), y)) >> 24) & 0xff) != 0) {
                         setPixel(
                             x + offsetX + letterOffset,
                             y - 1 + offsetY,
