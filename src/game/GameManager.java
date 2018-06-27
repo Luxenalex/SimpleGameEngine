@@ -15,12 +15,18 @@ public class GameManager extends AbstractGame {
     private final int TILE_SIZE = 24;
     private SoundClip clip;
 
+    private Image alphaImage;
+    private Image background;
+
     float temp = 0;
 
     public GameManager() {
         image = new TileSheet("/spriteSheet.png", 24, 24);
         clip = new SoundClip("/audio/tempSound.wav");
         clip.changeVolume(0);
+
+        background = new Image("/background.png");
+        alphaImage = new TileSheet("/alphaSpriteSheet.png", 24, 24);
     }
 
     @Override
@@ -40,9 +46,15 @@ public class GameManager extends AbstractGame {
     @Override
     public void render(SimpleGameEngine gameContainer, Renderer renderer) {
         //TODO Consider offsetting to center mouse on image.
-
         renderer.drawImage(
-                image,
+                background,
+                0,
+                0,
+                0,
+                0
+        );
+        renderer.drawImage(
+                alphaImage,
                 gameContainer.getInput().getMouseX() - TILE_SIZE/2,
                 gameContainer.getInput().getMouseY() - TILE_SIZE/2,
                 (int)temp,
