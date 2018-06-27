@@ -3,7 +3,6 @@ package engine;
 import engine.input.Input;
 import engine.window.Window;
 import engine.window.WindowSettings;
-import game.EngineLogger;
 
 public class SimpleGameEngine implements Runnable {
 

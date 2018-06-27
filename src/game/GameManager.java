@@ -11,22 +11,22 @@ import java.awt.event.KeyEvent;
 
 public class GameManager extends AbstractGame {
 
-    private Image image;
+    private TileSheet link;
     private final int TILE_SIZE = 24;
     private SoundClip clip;
 
-    private Image alphaImage;
+    private TileSheet ghostLink;
     private Image background;
 
     float temp = 0;
 
     public GameManager() {
-        image = new TileSheet("/spriteSheet.png", 24, 24);
+        link = new TileSheet("/spriteSheet.png", 24, 24);
         clip = new SoundClip("/audio/tempSound.wav");
         clip.changeVolume(0);
 
         background = new Image("/background.png");
-        alphaImage = new TileSheet("/alphaSpriteSheet.png", 24, 24);
+        ghostLink = new TileSheet("/alphaSpriteSheet.png", 24, 24);
     }
 
     @Override
@@ -45,21 +45,38 @@ public class GameManager extends AbstractGame {
 
     @Override
     public void render(SimpleGameEngine gameContainer, Renderer renderer) {
-        //TODO Consider offsetting to center mouse on image.
-        renderer.drawImage(
+        //TODO Consider offsetting to center mouse on link.
+        /*renderer.drawImage(
                 background,
-                0,
-                0,
                 0,
                 0
         );
-        renderer.drawImage(
-                alphaImage,
+        renderer.drawTile(
+                ghostLink,
                 gameContainer.getInput().getMouseX() - TILE_SIZE/2,
                 gameContainer.getInput().getMouseY() - TILE_SIZE/2,
                 (int)temp,
                 0
+        );*/
+
+        renderer.addImageToDraw(
+                ghostLink,
+                gameContainer.getInput().getMouseX() - TILE_SIZE/2,
+                gameContainer.getInput().getMouseY() - TILE_SIZE/2,
+                (int)temp,
+                0,
+                3
         );
+        renderer.addImageToDraw(background, 0, 0, 0);
+        renderer.addImageToDraw(
+                link,
+                40,
+                40,
+                (int)temp,
+                0,
+                1
+        );
+        renderer.draw();
 
         //renderer.drawFilledRectangle(gameContainer.getInput().getMouseX() - 16,
            //     gameContainer.getInput().getMouseY() - 16, 32, 32, 0xffffccff);
