@@ -2,10 +2,13 @@ package engine;
 
 import engine.gfx.Font;
 import engine.gfx.Image;
+import engine.gfx.OffsetImage;
 import engine.gfx.TileSheet;
 import engine.window.Window;
 
 import java.awt.image.DataBufferInt;
+import java.util.Comparator;
+import java.util.PriorityQueue;
 
 public class Renderer {
 
@@ -16,14 +19,31 @@ public class Renderer {
     private int zDepth = 0;
     private Font font;
 
+    private PriorityQueue<OffsetImage> drawables;
+
 
     public Renderer(Window window){
         canvasWidth = window.getWidth();
         canvasHeight = window.getHeight();
         pixels = ((DataBufferInt)window.getImageRasterDataBuffer()).getData();
-        zBuffer = new int[pixels.length];
 
+        zBuffer = new int[pixels.length];
         font = new Font(Font.DEFAULT);
+
+        drawables = new PriorityQueue<>(50, new Comparator<OffsetImage>() {
+            @Override
+            public int compare(OffsetImage o1, OffsetImage o2) {
+
+                if(o1.getRenderLayer() < o2.getRenderLayer()) {
+                    return -1;
+                }
+                if(o1.getRenderLayer() > o2.getRenderLayer()) {
+                    return 1;
+                }
+
+                return 0;
+            }
+        });
     }
 
     public void clear(){
@@ -33,27 +53,21 @@ public class Renderer {
         }
     }
 
-    public void setPixel(int x, int y, int value) {
+    public void addImageToDraw(TileSheet sheet, int offsetX, int offsetY,
+                               int tileFromLeft, int tileFromTop, int renderLayer) {
+        Image image = sheet.getTile(tileFromLeft, tileFromTop);
+        drawables.add(new OffsetImage(image, offsetX, offsetY, renderLayer));
+    }
 
-        int alpha = ((value >> 24) & 0xff);
-        if((x < 0 || x >= canvasWidth || y < 0 || y >= canvasHeight) ||
-           alpha == 0) {
-            return;
-        }
-        if(zBuffer[x + y * canvasWidth] > zDepth) {
-            return;
-        }
-        if(alpha == 255) {
-            pixels[x + y * canvasWidth] = value;
-        }
-        else {
-            int color = pixels[x + y * canvasWidth];
+    public void addImageToDraw(Image image, int offsetX, int offsetY, int renderLayer) {
+        drawables.add(new OffsetImage(image, offsetX, offsetY, renderLayer));
+    }
 
-            int blendedRed = (color >> 16) & 0xff - (int)(((color >> 16) & 0xff - (value >> 16) & 0xff) * (alpha / 255f));
-            int blendedGreen = (color >> 8) & 0xff - (int)(((color >> 8) & 0xff - (value >> 8) & 0xff) * (alpha / 255f));
-            int blendedBlue = color & 0xff - (int)((color & 0xff - value & 0xff) * (alpha / 255f));
-
-            pixels[x + y * canvasWidth] = (255 << 24 | blendedRed << 16 | blendedGreen << 8 | blendedBlue);
+    public void draw() {
+        OffsetImage drawable;
+        while(!drawables.isEmpty()) {
+            drawable = drawables.poll();
+            drawImage(drawable.getImage(), drawable.getOffsetX(), drawable.getOffsetY());
         }
     }
 
@@ -83,16 +97,15 @@ public class Renderer {
         }
     }
 
-    public void drawImage(Image image, int offsetX, int offsetY,
-                          int tileFromLeft, int tileFromTop) {
+    public void drawTile(TileSheet sheet, int offsetX, int offsetY,
+                         int tileFromLeft, int tileFromTop) {
+        Image image = sheet.getTile(tileFromLeft, tileFromTop);
+        drawImage(image, offsetX, offsetY);
+    }
+
+    public void drawImage(Image image, int offsetX, int offsetY) {
 
         if(isOutsideOfCanvas(image, offsetX, offsetY)) return;
-
-        //TODO If this must be expanded to more classes, create Drawable superclass.
-        if(!(image instanceof TileSheet)){
-            tileFromLeft = 0;
-            tileFromTop = 0;
-        }
 
         int startX = 0;
         int startY = 0;
@@ -104,35 +117,48 @@ public class Renderer {
             startY = reduceAreaToDraw(startY, offsetY);
         }
 
-        int imageWidth = image instanceof TileSheet ?
-                         ((TileSheet)image).getTileWidth() :
-                         image.getWidth();
-        int imageHeight = image instanceof TileSheet ?
-                          ((TileSheet)image).getTileHeight() :
-                          image.getHeight();
-
+        int imageWidth = image.getWidth();
         if(imageWidth + offsetX >= canvasWidth){
             imageWidth = reduceAreaToDraw(imageWidth, imageWidth + offsetX - canvasWidth);
         }
+
+        int imageHeight = image.getHeight();
         if (imageHeight + offsetY >= canvasHeight){
             imageHeight = reduceAreaToDraw(imageHeight, imageHeight + offsetY - canvasHeight);
         }
-
-        int modifierX = image instanceof TileSheet ?
-                        tileFromLeft * ((TileSheet)image).getTileWidth() :
-                        tileFromLeft;
-        int modifierY = image instanceof TileSheet ?
-                        tileFromTop * ((TileSheet)image).getTileHeight() :
-                        tileFromTop;
 
         for(int y = startY; y < imageHeight; y++) {
             for(int x = startX; x < imageWidth; x++) {
                 setPixel(
                         x + offsetX,
                         y + offsetY,
-                        image.getColor(x + modifierX, y + modifierY)
+                        image.getColor(x, y)
                         );
             }
+        }
+    }
+
+    public void setPixel(int x, int y, int value) {
+
+        int alpha = ((value >> 24) & 0xff);
+        if((x < 0 || x >= canvasWidth || y < 0 || y >= canvasHeight) ||
+           alpha == 0) {
+            return;
+        }
+        if(zBuffer[x + y * canvasWidth] > zDepth) {
+            return;
+        }
+        if(alpha == 255) {
+            pixels[x + y * canvasWidth] = value;
+        }
+        else {
+            int color = pixels[x + y * canvasWidth];
+
+            int blendedRed = (color >> 16) & 0xff - (int)(((color >> 16) & 0xff - (value >> 16) & 0xff) * (alpha / 255f));
+            int blendedGreen = (color >> 8) & 0xff - (int)(((color >> 8) & 0xff - (value >> 8) & 0xff) * (alpha / 255f));
+            int blendedBlue = color & 0xff - (int)((color & 0xff - value & 0xff) * (alpha / 255f));
+
+            pixels[x + y * canvasWidth] = (255 << 24 | blendedRed << 16 | blendedGreen << 8 | blendedBlue);
         }
     }
 
