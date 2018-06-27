@@ -69,7 +69,7 @@ public class GameManager extends AbstractGame {
         );
         renderer.addImageToDraw(background, 0, 0, 0);
         renderer.addImageToDraw(
-                link,
+                ghostLink,
                 40,
                 40,
                 (int)temp,
