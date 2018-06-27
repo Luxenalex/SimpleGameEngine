@@ -35,6 +35,12 @@ public class Image {
         }
     }
 
+    public Image(int[] pixels, int widht, int height){
+        this.width = widht;
+        this.height = height;
+        this.pixels = pixels;
+    }
+
     private InputStream getImageInputStream(String path) {
         InputStream imageStream = Image.class.getResourceAsStream(path);
         if(imageStream == null) {
@@ -58,9 +64,5 @@ public class Image {
 
     public int getHeight() {
         return height;
-    }
-
-    public int[] getPixels() {
-        return pixels;
     }
 }
