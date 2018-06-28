@@ -12,11 +12,13 @@ import java.util.PriorityQueue;
 
 public class Renderer {
 
+
     private int canvasWidth;
     private int canvasHeight;
     private int[] pixels;
-    private int[] zBuffer;
-    private int zDepth = 0;
+    private int[] lightMap;
+    private int[] lightBlock;
+    private int ambientLighting = 0xFF6b6b6b;
     private Font font;
 
     private PriorityQueue<OffsetImage> drawables;
@@ -27,7 +29,8 @@ public class Renderer {
         canvasHeight = window.getHeight();
         pixels = ((DataBufferInt)window.getImageRasterDataBuffer()).getData();
 
-        zBuffer = new int[pixels.length];
+        lightMap = new int[pixels.length];
+        lightBlock = new int[pixels.length];
         font = new Font(Font.DEFAULT);
 
         drawables = new PriorityQueue<>(50, new Comparator<OffsetImage>() {
@@ -49,7 +52,8 @@ public class Renderer {
     public void clear(){
         for(int i = 0; i < pixels.length; i++){
             pixels[i] = 0;
-            zBuffer[i] = 0;
+            lightMap[i] = ambientLighting;
+            lightBlock[i] = 0;
         }
     }
 
@@ -69,17 +73,29 @@ public class Renderer {
             drawable = drawables.poll();
             drawImage(drawable.getImage(), drawable.getOffsetX(), drawable.getOffsetY());
         }
+
+        for(int i = 0; i < pixels.length; i++){
+            float lightMapRed = ((lightMap[i] >> 16) & 0xFF) / 255f;
+            float lightMapGreen = ((lightMap[i] >> 8) & 0xFF) / 255f;
+            float lightMapBlue = ((lightMap[i]) & 0xFF) / 255f;
+            int red = (pixels[i] >> 16) & 0xFF;
+            int green = (pixels[i] >> 8) & 0xFF;
+            int blue = pixels[i] & 0xFF;
+
+            pixels[i] = (int)(red * lightMapRed) << 16 |
+                    (int)(green * lightMapGreen) << 8 |
+                    (int)(blue * lightMapBlue);
+        }
     }
 
     public void drawText(String text, int offsetX, int offsetY, int color) {
 
         Image fontImage = font.getFontImage();
-        int asciiPositionsToSkipOver = 32;
         int letterOffset = 0;
         text = text.toUpperCase();
 
         for(int i = 0; i < text.length(); i++) {
-            int character = text.codePointAt(i) - asciiPositionsToSkipOver;
+            int character = text.codePointAt(i);
 
             for(int y = 1; y < fontImage.getHeight(); y++) {
                 for(int x = 0; x < font.getCharacterWidth(character); x++) {
@@ -105,7 +121,9 @@ public class Renderer {
 
     public void drawImage(Image image, int offsetX, int offsetY) {
 
-        if(isOutsideOfCanvas(image, offsetX, offsetY)) return;
+        if(isOutsideOfCanvas(image.getWidth(), image.getHeight(), offsetX, offsetY)) {
+            return;
+        }
 
         int startX = 0;
         int startY = 0;
@@ -145,9 +163,6 @@ public class Renderer {
            alpha == 0) {
             return;
         }
-        if(zBuffer[x + y * canvasWidth] > zDepth) {
-            return;
-        }
         if(alpha == 1) {
             pixels[x + y * canvasWidth] = value;
         }
@@ -165,7 +180,7 @@ public class Renderer {
             int blendedGreen = (int)(newGreen * alpha + oldGreen * (1 - alpha));
             int blendedBlue = (int)(newBlue * alpha + oldBlue * (1 - alpha));
 
-            pixels[x + y * canvasWidth] = (255 << 24 | blendedRed << 16 | blendedGreen << 8 | blendedBlue);
+            pixels[x + y * canvasWidth] = (blendedRed << 16 | blendedGreen << 8 | blendedBlue);
         }
     }
 
@@ -173,18 +188,38 @@ public class Renderer {
         return start - offset;
     }
 
-    private boolean isOutsideOfCanvas(Image image, int offsetX, int offsetY) {
-        return offsetX < -image.getWidth() || offsetY < -image.getHeight() ||
-               offsetX >= canvasWidth || offsetY >= canvasHeight;
-    }
-
     private boolean isOutsideOfCanvas(int width, int height, int offsetX, int offsetY) {
         return offsetX < -width || offsetY < -height ||
                 offsetX >= canvasWidth || offsetY >= canvasHeight;
     }
 
+    private boolean isOutsideOfCanvas(int x, int y) {
+        return x < 0 || x >= canvasWidth || y < 0 || y >= canvasHeight;
+    }
+
     public int getFontHeight() {
         return font.getHeight();
+    }
+
+    public void setLightMapPixel(int x, int y, int value){
+        if(isOutsideOfCanvas(x, y)){
+            return;
+        }
+
+        int baseColor = lightMap[x + y * canvasWidth];
+
+        int baseRed = (baseColor >> 16) & 0xFF;
+        int baseGreen = (baseColor >> 8) & 0xFF;
+        int baseBlue = baseColor & 0xFF;
+        int newRed = (value >> 16) & 0xFF;
+        int newGreen = (value >> 8) & 0xFF;
+        int newBlue = value & 0xFF;
+
+        int maxRed = Math.max(baseRed, newRed);
+        int maxGreen = Math.max(baseGreen, newGreen);
+        int maxBlue = Math.max(baseBlue, newBlue);
+
+        lightMap[x + y * canvasWidth] = (maxRed << 16 | maxGreen << 8 | maxBlue);
     }
 
     public void drawRectangle(int offsetX, int offsetY, int width, int height, int color){

@@ -17,6 +17,7 @@ public class GameManager extends AbstractGame {
 
     private TileSheet ghostLink;
     private Image background;
+    private Image yellowLight = new Image("/yellowLight.png");
 
     float temp = 0;
 
@@ -76,6 +77,13 @@ public class GameManager extends AbstractGame {
                 0,
                 1
         );
+
+        for(int x = 0; x < yellowLight.getWidth(); x++){
+            for(int y = 0; y < yellowLight.getHeight(); y++){
+                renderer.setLightMapPixel(x, y, yellowLight.getColor(x, y));
+            }
+        }
+
         renderer.draw();
 
         //renderer.drawFilledRectangle(gameContainer.getInput().getMouseX() - 16,

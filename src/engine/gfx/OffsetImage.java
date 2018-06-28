@@ -1,6 +1,6 @@
 package engine.gfx;
 
-public class OffsetImage {
+public class   OffsetImage {
     private Image image;
     private int offsetX;
     private int offsetY;
