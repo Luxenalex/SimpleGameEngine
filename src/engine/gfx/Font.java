@@ -2,7 +2,9 @@ package engine.gfx;
 
 public class Font {
 
-    public static final String DEFAULT = "/fonts/font.png";
+    public static final String DEFAULT = "/fonts/courier.png";
+    private static final int CHAR_START = 0xFF0000FF;
+    private static final int CHAR_STOP = 0xFFFFFF00;
 
     private Image fontImage;
     private int[] offsets;
@@ -21,10 +23,10 @@ public class Font {
 
         int index = 0;
         for(int i = 0; i < fontImage.getWidth(); i++){
-            if(fontImage.getColor(i, 0) == 0xFF00FF00){
+            if(fontImage.getColor(i, 0) == CHAR_START){
                 offsets[index] = i;
             }
-            if(fontImage.getColor(i, 0) == 0xFF0000FF){
+            if(fontImage.getColor(i, 0) == CHAR_STOP){
                 widths[index] = i + 1 - offsets[index];
                 index++;
             }
@@ -35,7 +37,7 @@ public class Font {
         int numCharacters = 0;
 
         for(int i = 0; i < fontImage.getWidth(); i++) {
-            if(fontImage.getColor(i, 0) == 0xFF00FF00){
+            if(fontImage.getColor(i, 0) == CHAR_START){
                 numCharacters++;
             }
         }
