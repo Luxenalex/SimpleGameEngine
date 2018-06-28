@@ -5,6 +5,7 @@ import engine.Renderer;
 import engine.SimpleGameEngine;
 import engine.audio.SoundClip;
 import engine.gfx.Image;
+import engine.gfx.Light;
 import engine.gfx.TileSheet;
 
 import java.awt.event.KeyEvent;
@@ -17,7 +18,8 @@ public class GameManager extends AbstractGame {
 
     private TileSheet ghostLink;
     private Image background;
-    private Image yellowLight = new Image("/yellowLight.png");
+
+    private Light light;
 
     float temp = 0;
 
@@ -28,6 +30,7 @@ public class GameManager extends AbstractGame {
 
         background = new Image("/background.png");
         ghostLink = new TileSheet("/alphaSpriteSheet.png", 24, 24);
+        light = new Light(100, 0xFF00FF00);
     }
 
     @Override
@@ -47,19 +50,6 @@ public class GameManager extends AbstractGame {
     @Override
     public void render(SimpleGameEngine gameContainer, Renderer renderer) {
         //TODO Consider offsetting to center mouse on link.
-        /*renderer.drawImage(
-                background,
-                0,
-                0
-        );
-        renderer.drawTile(
-                ghostLink,
-                gameContainer.getInput().getMouseX() - TILE_SIZE/2,
-                gameContainer.getInput().getMouseY() - TILE_SIZE/2,
-                (int)temp,
-                0
-        );*/
-
         renderer.addImageToDraw(
                 ghostLink,
                 gameContainer.getInput().getMouseX() - TILE_SIZE/2,
@@ -69,20 +59,8 @@ public class GameManager extends AbstractGame {
                 3
         );
         renderer.addImageToDraw(background, 0, 0, 0);
-        renderer.addImageToDraw(
-                ghostLink,
-                40,
-                40,
-                (int)temp,
-                0,
-                1
-        );
 
-        for(int x = 0; x < yellowLight.getWidth(); x++){
-            for(int y = 0; y < yellowLight.getHeight(); y++){
-                renderer.setLightMapPixel(x, y, yellowLight.getColor(x, y));
-            }
-        }
+        renderer.drawLight(light, gameContainer.getInput().getMouseX(), gameContainer.getInput().getMouseY());
 
         renderer.draw();
 

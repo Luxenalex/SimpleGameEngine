@@ -1,9 +1,6 @@
 package engine;
 
-import engine.gfx.Font;
-import engine.gfx.Image;
-import engine.gfx.OffsetImage;
-import engine.gfx.TileSheet;
+import engine.gfx.*;
 import engine.window.Window;
 
 import java.awt.image.DataBufferInt;
@@ -222,6 +219,54 @@ public class Renderer {
         lightMap[x + y * canvasWidth] = (maxRed << 16 | maxGreen << 8 | maxBlue);
     }
 
+    public void drawLight(Light light, int offsetX, int offsetY){
+        int radius = light.getRadius();
+        int diameter = light.getDiameter();
+
+        for(int i = 0; i <= light.getDiameter(); i++) {
+            drawLightLine(light, radius, radius, i, 0, offsetX, offsetY);
+            drawLightLine(light, radius, radius, i, diameter, offsetX, offsetY);
+            drawLightLine(light, radius, radius, 0, i, offsetX, offsetY);
+            drawLightLine(light, radius, radius, diameter, i, offsetX, offsetY);
+        }
+    }
+
+    private void drawLightLine(Light light, int startX, int startY, int endX, int endY, int offsetX, int offsetY) {
+        int dX = Math.abs(endX - startX);
+        int dY = Math.abs(endY - startY);
+
+        int sX = startX < endX ? 1 : -1;
+        int sY = startY < endY ? 1 : -1;
+
+        int error = dX - dY;
+        int error2;
+
+        while(true) {
+            int screenX = startX - light.getRadius() + offsetX;
+            int screenY = startY - light.getRadius() + offsetY;
+
+            int lightColor = light.getLight(startX, startY);
+            if(lightColor == 0) {
+                return;
+            }
+
+            setLightMapPixel(screenX, screenY, lightColor);
+            if(startX == endX && startY == endY) {
+                break;
+            }
+
+            error2 = 2 * error;
+            if(error2 > -1 * dY) {
+                error -= dY;
+                startX += sX;
+            }
+            if(error2 < dX) {
+                error += dX;
+                startY += sY;
+            }
+        }
+    }
+
     public void drawRectangle(int offsetX, int offsetY, int width, int height, int color){
         for(int y = 0; y <= height; y++){
             setPixel(offsetX, y + offsetY, color);
@@ -263,5 +308,7 @@ public class Renderer {
             }
         }
     }
+
+
 
 }
