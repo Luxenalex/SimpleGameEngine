@@ -69,8 +69,9 @@ public class GameManager extends AbstractGame {
         );
         renderer.addImageToDraw(background, 0, 0, 0);
 
-        renderer.draw();
-        renderer.setLight(light, gameContainer.getInput().getMouseX() - 7, gameContainer.getInput().getMouseY());
+        renderer.drawImages();
+        renderer.addLightToDraw(light, gameContainer.getInput().getMouseX() - 7, gameContainer.getInput().getMouseY());
+        renderer.addLightToDraw(new Light(75, 0xFF0000FF), 200, 150);
 
         renderer.drawLight();
 

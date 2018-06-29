@@ -4,6 +4,7 @@ import engine.gfx.*;
 import engine.window.Window;
 
 import java.awt.image.DataBufferInt;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
@@ -19,6 +20,7 @@ public class Renderer {
     private Font font;
 
     private PriorityQueue<OffsetImage> drawables;
+    private ArrayList<LightRequest> lights;
 
 
     public Renderer(Window window){
@@ -30,20 +32,18 @@ public class Renderer {
         lightBlock = new int[pixels.length];
         font = new Font(Font.DEFAULT);
 
-        drawables = new PriorityQueue<>(50, new Comparator<OffsetImage>() {
-            @Override
-            public int compare(OffsetImage o1, OffsetImage o2) {
+        drawables = new PriorityQueue<>(50, (image1, image2) -> {
 
-                if(o1.getRenderLayer() < o2.getRenderLayer()) {
-                    return -1;
-                }
-                if(o1.getRenderLayer() > o2.getRenderLayer()) {
-                    return 1;
-                }
-
-                return 0;
+            if(image1.getRenderLayer() < image2.getRenderLayer()) {
+                return -1;
             }
+            if(image1.getRenderLayer() > image2.getRenderLayer()) {
+                return 1;
+            }
+
+            return 0;
         });
+        lights = new ArrayList<>();
     }
 
     public void clear(){
@@ -65,26 +65,11 @@ public class Renderer {
         drawables.add(new OffsetImage(image, offsetX, offsetY, renderLayer));
     }
 
-    public void draw() {
+    public void drawImages() {
         OffsetImage drawable;
         while(!drawables.isEmpty()) {
             drawable = drawables.poll();
             drawImage(drawable.getImage(), drawable.getOffsetX(), drawable.getOffsetY());
-        }
-    }
-
-    public void drawLight() {
-        for(int i = 0; i < pixels.length; i++){
-            float lightMapRed = ((lightMap[i] >> 16) & 0xFF) / 255f;
-            float lightMapGreen = ((lightMap[i] >> 8) & 0xFF) / 255f;
-            float lightMapBlue = ((lightMap[i]) & 0xFF) / 255f;
-            int red = (pixels[i] >> 16) & 0xFF;
-            int green = (pixels[i] >> 8) & 0xFF;
-            int blue = pixels[i] & 0xFF;
-
-            pixels[i] = (int)(red * lightMapRed) << 16 |
-                    (int)(green * lightMapGreen) << 8 |
-                    (int)(blue * lightMapBlue);
         }
     }
 
@@ -187,34 +172,6 @@ public class Renderer {
         }
     }
 
-    /*public void setPixel(int x, int y, int value) {
-
-        float alpha = ((value >> 24) & 0xff)/255f;
-        if((x < 0 || x >= canvasWidth || y < 0 || y >= canvasHeight) ||
-           alpha == 0) {
-            return;
-        }
-        if(alpha == 1) {
-            pixels[x + y * canvasWidth] = value;
-        }
-        else {
-            int color = pixels[x + y * canvasWidth];
-
-            int newRed = (value >> 16) & 0xFF;
-            int newGreen = (value >> 8) & 0xFF;
-            int newBlue = value & 0xFF;
-            int oldRed = (color >> 16) & 0xFF;
-            int oldGreen = (color >> 8) & 0xFF;
-            int oldBlue = color & 0xFF;
-
-            int blendedRed = (int)(newRed * alpha + oldRed * (1 - alpha));
-            int blendedGreen = (int)(newGreen * alpha + oldGreen * (1 - alpha));
-            int blendedBlue = (int)(newBlue * alpha + oldBlue * (1 - alpha));
-
-            pixels[x + y * canvasWidth] = (blendedRed << 16 | blendedGreen << 8 | blendedBlue);
-        }
-    }*/
-
     private int reduceAreaToDraw(int start, int offset) {
         return start - offset;
     }
@@ -259,6 +216,31 @@ public class Renderer {
         }
 
         lightBlock[x + y * canvasWidth] = value;
+    }
+
+    public void addLightToDraw(Light light, int offsetX, int offsetY) {
+        lights.add(new LightRequest(light, offsetX, offsetY));
+    }
+
+    public void drawLight() {
+
+        for(LightRequest request : lights) {
+            setLight(request.getLight(), request.getCenterX(), request.getCenterY());
+        }
+        lights.clear();
+
+        for(int i = 0; i < pixels.length; i++){
+            float lightMapRed = ((lightMap[i] >> 16) & 0xFF) / 255f;
+            float lightMapGreen = ((lightMap[i] >> 8) & 0xFF) / 255f;
+            float lightMapBlue = ((lightMap[i]) & 0xFF) / 255f;
+            int red = (pixels[i] >> 16) & 0xFF;
+            int green = (pixels[i] >> 8) & 0xFF;
+            int blue = pixels[i] & 0xFF;
+
+            pixels[i] = (int)(red * lightMapRed) << 16 |
+                        (int)(green * lightMapGreen) << 8 |
+                        (int)(blue * lightMapBlue);
+        }
     }
 
     public void setLight(Light light, int offsetX, int offsetY){
