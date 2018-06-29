@@ -25,12 +25,13 @@ public class GameManager extends AbstractGame {
 
     public GameManager() {
         link = new TileSheet("/spriteSheet.png", 24, 24);
+        link.setLightBlock(Light.FULL);
         clip = new SoundClip("/audio/tempSound.wav");
         clip.changeVolume(0);
 
         background = new Image("/background.png");
         ghostLink = new TileSheet("/alphaSpriteSheet.png", 24, 24);
-        light = new Light(100, 0xFF00FF00);
+        light = new Light(100, 0xFFeeee00);
     }
 
     @Override
@@ -58,14 +59,21 @@ public class GameManager extends AbstractGame {
                 0,
                 3
         );
+        renderer.addImageToDraw(
+                link,
+                0,
+                0,
+                (int)temp,
+                0,
+                3
+        );
         renderer.addImageToDraw(background, 0, 0, 0);
 
-        renderer.drawLight(light, gameContainer.getInput().getMouseX(), gameContainer.getInput().getMouseY());
-
         renderer.draw();
+        renderer.setLight(light, gameContainer.getInput().getMouseX(), gameContainer.getInput().getMouseY());
 
-        //renderer.drawFilledRectangle(gameContainer.getInput().getMouseX() - 16,
-           //     gameContainer.getInput().getMouseY() - 16, 32, 32, 0xffffccff);
+        renderer.drawLight();
+
     }
 
     public static void main(String args[]){

@@ -2,6 +2,9 @@ package engine.gfx;
 
 public class Light {
 
+    public static final int NONE = 0;
+    public static final int FULL = 1;
+
     private int radius;
     private int diameter;
     private int color;
@@ -17,11 +20,6 @@ public class Light {
         int green = (color >> 8) & 0xFF;
         int blue = color & 0xFF;
 
-        System.out.println(Integer.toHexString(red << 16));
-        System.out.println(Integer.toHexString(green));
-        System.out.println(Integer.toHexString(blue));
-
-
         for(int y = 0; y < diameter; y++) {
             for (int x = 0; x < diameter; x++) {
 
@@ -33,10 +31,6 @@ public class Light {
                     double power = 1 - (distanceFromCenter / radius);
                     lightMap[x + y * diameter] = (int)(red * power) << 16 |
                             (int)(green * power) << 8 | (int)(blue * power);
-
-                    /*System.out.println( Integer.toHexString((int)(red * power) << 16 |
-                            (int)(green * power) << 8 | (int)(blue * power)));
-                           */
                 }
                 else {
                     lightMap[x + y * diameter] = 0;

@@ -11,6 +11,7 @@ public class Image {
     private int width;
     private int height;
     private int[] pixels;
+    private int lightBlock = Light.NONE;
 
     public Image(String path){
 
@@ -64,5 +65,13 @@ public class Image {
 
     public int getHeight() {
         return height;
+    }
+
+    public int getLightBlock() {
+        return lightBlock;
+    }
+
+    public void setLightBlock(int lightBlock) {
+        this.lightBlock = lightBlock;
     }
 }

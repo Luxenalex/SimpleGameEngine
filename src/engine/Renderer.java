@@ -57,6 +57,7 @@ public class Renderer {
     public void addImageToDraw(TileSheet sheet, int offsetX, int offsetY,
                                int tileFromLeft, int tileFromTop, int renderLayer) {
         Image image = sheet.getTile(tileFromLeft, tileFromTop);
+        image.setLightBlock(sheet.getLightBlock());
         drawables.add(new OffsetImage(image, offsetX, offsetY, renderLayer));
     }
 
@@ -70,7 +71,9 @@ public class Renderer {
             drawable = drawables.poll();
             drawImage(drawable.getImage(), drawable.getOffsetX(), drawable.getOffsetY());
         }
+    }
 
+    public void drawLight() {
         for(int i = 0; i < pixels.length; i++){
             float lightMapRed = ((lightMap[i] >> 16) & 0xFF) / 255f;
             float lightMapGreen = ((lightMap[i] >> 8) & 0xFF) / 255f;
@@ -103,6 +106,7 @@ public class Renderer {
                             y - 1 + offsetY,
                             color
                         );
+
                     }
                 }
             }
@@ -149,6 +153,7 @@ public class Renderer {
                         y + offsetY,
                         image.getColor(x, y)
                         );
+                setLightBlock(x + offsetX, y + offsetY, image.getLightBlock());
             }
         }
     }
@@ -219,19 +224,27 @@ public class Renderer {
         lightMap[x + y * canvasWidth] = (maxRed << 16 | maxGreen << 8 | maxBlue);
     }
 
-    public void drawLight(Light light, int offsetX, int offsetY){
+    public void setLightBlock(int x, int y, int value){
+        if(isOutsideOfCanvas(x, y)){
+            return;
+        }
+
+        lightBlock[x + y * canvasWidth] = value;
+    }
+
+    public void setLight(Light light, int offsetX, int offsetY){
         int radius = light.getRadius();
         int diameter = light.getDiameter();
 
         for(int i = 0; i <= light.getDiameter(); i++) {
-            drawLightLine(light, radius, radius, i, 0, offsetX, offsetY);
-            drawLightLine(light, radius, radius, i, diameter, offsetX, offsetY);
-            drawLightLine(light, radius, radius, 0, i, offsetX, offsetY);
-            drawLightLine(light, radius, radius, diameter, i, offsetX, offsetY);
+            setLightLine(light, radius, radius, i, 0, offsetX, offsetY);
+            setLightLine(light, radius, radius, i, diameter, offsetX, offsetY);
+            setLightLine(light, radius, radius, 0, i, offsetX, offsetY);
+            setLightLine(light, radius, radius, diameter, i, offsetX, offsetY);
         }
     }
 
-    private void drawLightLine(Light light, int startX, int startY, int endX, int endY, int offsetX, int offsetY) {
+    private void setLightLine(Light light, int startX, int startY, int endX, int endY, int offsetX, int offsetY) {
         int dX = Math.abs(endX - startX);
         int dY = Math.abs(endY - startY);
 
@@ -245,8 +258,16 @@ public class Renderer {
             int screenX = startX - light.getRadius() + offsetX;
             int screenY = startY - light.getRadius() + offsetY;
 
+            if(isOutsideOfCanvas(screenX, screenY)){
+                return;
+            }
+
             int lightColor = light.getLight(startX, startY);
             if(lightColor == 0) {
+                return;
+            }
+
+            if(lightBlock[screenX + screenY * canvasWidth] == Light.FULL){
                 return;
             }
 
