@@ -16,11 +16,11 @@ public Input(Canvas canvas, WindowSettings windowSettings){
     public void update() {
         mouse.setScroll(0);
 
-        for(int i = 0; i < NumInputs.KEYS.getvalue(); i++){
+        for(int i = 0; i < NumInputs.KEYS.getValue(); i++){
 
             keyboard.setLastKey(keyboard.isKey(i), i);
         }
-        for(int i = 0; i < NumInputs.BUTTONS.getvalue(); i++){
+        for(int i = 0; i < NumInputs.BUTTONS.getValue(); i++){
             mouse.setLastButton(mouse.getButton(i), i);
         }
     }

@@ -36,8 +36,8 @@ public class Image {
         }
     }
 
-    public Image(int[] pixels, int widht, int height){
-        this.width = widht;
+    public Image(int[] pixels, int width, int height){
+        this.width = width;
         this.height = height;
         this.pixels = pixels;
     }

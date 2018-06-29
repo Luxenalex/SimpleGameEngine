@@ -3,7 +3,6 @@ package engine;
 import engine.window.Window;
 import engine.window.WindowSettings;
 import org.junit.*;
-import org.junit.Assert.*;
 
 public class RendererTest {
 

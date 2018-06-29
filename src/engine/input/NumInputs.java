@@ -10,7 +10,7 @@ public enum NumInputs {
         this.value = value;
     }
 
-    public int getvalue() {
+    public int getValue() {
         return this.value;
     }
 }

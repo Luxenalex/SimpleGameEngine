@@ -10,8 +10,8 @@ public class MouseInput implements
 
     private WindowSettings windowSettings;
 
-    private boolean[] buttons = new boolean[NumInputs.BUTTONS.getvalue()];
-    private boolean[] lastButtons = new boolean[NumInputs.BUTTONS.getvalue()];
+    private boolean[] buttons = new boolean[NumInputs.BUTTONS.getValue()];
+    private boolean[] lastButtons = new boolean[NumInputs.BUTTONS.getValue()];
 
     private int mouseX = 0;
     private int mouseY = 0;

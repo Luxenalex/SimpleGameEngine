@@ -5,8 +5,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class KeyboardInput implements KeyListener {
-    private boolean[] keys = new boolean[NumInputs.KEYS.getvalue()];
-    private boolean[] lastKeys = new boolean[NumInputs.KEYS.getvalue()];
+    private boolean[] keys = new boolean[NumInputs.KEYS.getValue()];
+    private boolean[] lastKeys = new boolean[NumInputs.KEYS.getValue()];
 
     public KeyboardInput(Canvas canvas) {
         canvas.addKeyListener(this);
