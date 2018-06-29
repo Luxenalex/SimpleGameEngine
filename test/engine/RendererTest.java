@@ -24,7 +24,7 @@ public class RendererTest {
 
         for(int y = 0; y < window.getHeight(); y++) {
             for(int x = 0; x < window.getWidth(); x++) {
-                renderer.setPixel(x, y, 0xFF088A08);
+                renderer.setPixel(x, y, 0xFF088A08, 0);
             }
         }
 

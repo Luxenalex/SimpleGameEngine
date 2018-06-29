@@ -104,7 +104,8 @@ public class Renderer {
                         setPixel(
                             x + offsetX + letterOffset,
                             y - 1 + offsetY,
-                            color
+                            color,
+                            fontImage.getLightBlock()
                         );
 
                     }
@@ -151,14 +152,42 @@ public class Renderer {
                 setPixel(
                         x + offsetX,
                         y + offsetY,
-                        image.getColor(x, y)
+                        image.getColor(x, y),
+                        image.getLightBlock()
                         );
-                setLightBlock(x + offsetX, y + offsetY, image.getLightBlock());
             }
         }
     }
+    public void setPixel(int x, int y, int value, int lightBlock) {
 
-    public void setPixel(int x, int y, int value) {
+        float alpha = ((value >> 24) & 0xff)/255f;
+        if((x < 0 || x >= canvasWidth || y < 0 || y >= canvasHeight) ||
+           alpha == 0) {
+            return;
+        }
+        if(alpha == 1) {
+            pixels[x + y * canvasWidth] = value;
+            setLightBlock(x, y, lightBlock);
+        }
+        else {
+            int color = pixels[x + y * canvasWidth];
+
+            int newRed = (value >> 16) & 0xFF;
+            int newGreen = (value >> 8) & 0xFF;
+            int newBlue = value & 0xFF;
+            int oldRed = (color >> 16) & 0xFF;
+            int oldGreen = (color >> 8) & 0xFF;
+            int oldBlue = color & 0xFF;
+
+            int blendedRed = (int)(newRed * alpha + oldRed * (1 - alpha));
+            int blendedGreen = (int)(newGreen * alpha + oldGreen * (1 - alpha));
+            int blendedBlue = (int)(newBlue * alpha + oldBlue * (1 - alpha));
+
+            pixels[x + y * canvasWidth] = (blendedRed << 16 | blendedGreen << 8 | blendedBlue);
+        }
+    }
+
+    /*public void setPixel(int x, int y, int value) {
 
         float alpha = ((value >> 24) & 0xff)/255f;
         if((x < 0 || x >= canvasWidth || y < 0 || y >= canvasHeight) ||
@@ -184,7 +213,7 @@ public class Renderer {
 
             pixels[x + y * canvasWidth] = (blendedRed << 16 | blendedGreen << 8 | blendedBlue);
         }
-    }
+    }*/
 
     private int reduceAreaToDraw(int start, int offset) {
         return start - offset;
@@ -290,13 +319,13 @@ public class Renderer {
 
     public void drawRectangle(int offsetX, int offsetY, int width, int height, int color){
         for(int y = 0; y <= height; y++){
-            setPixel(offsetX, y + offsetY, color);
-            setPixel(offsetX + width, y + offsetY, color);
+            setPixel(offsetX, y + offsetY, color, Light.NONE);
+            setPixel(offsetX + width, y + offsetY, color, Light.NONE);
         }
 
         for(int x = 0; x <= width; x++){
-            setPixel(x + offsetX, offsetY, color);
-            setPixel(x + offsetX, offsetY + height, color);
+            setPixel(x + offsetX, offsetY, color, Light.NONE);
+            setPixel(x + offsetX, offsetY + height, color, Light.NONE);
         }
     }
 
@@ -325,7 +354,7 @@ public class Renderer {
 
         for(int y = startY; y <= height; y++){
             for (int x = startX; x <= width; x++){
-                setPixel(x + offsetX, y + offsetY, color);
+                setPixel(x + offsetX, y + offsetY, color, Light.NONE);
             }
         }
     }
