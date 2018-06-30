@@ -1,5 +1,7 @@
 package engine;
 
+import engine.rendering.Renderer;
+
 public abstract class AbstractGame {
 
     public abstract void update(SimpleGameEngine gameContainer, float deltaTime);

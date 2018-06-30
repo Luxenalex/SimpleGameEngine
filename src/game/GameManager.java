@@ -1,7 +1,7 @@
 package game;
 
 import engine.AbstractGame;
-import engine.Renderer;
+import engine.rendering.Renderer;
 import engine.SimpleGameEngine;
 import engine.audio.SoundClip;
 import engine.gfx.Image;

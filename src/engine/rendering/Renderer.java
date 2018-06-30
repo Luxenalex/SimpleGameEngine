@@ -1,4 +1,4 @@
-package engine;
+package engine.rendering;
 
 import engine.gfx.*;
 import engine.window.Window;
@@ -9,18 +9,17 @@ import java.util.PriorityQueue;
 
 public class Renderer {
 
-
     private int canvasWidth;
     private int canvasHeight;
-    private int[] pixels;
+    protected int[] pixels;
     private int[] lightMap;
     private int[] lightBlock;
     private int ambientLighting = 0xFF6b6b6b;
     private Font font;
+    private DrawableHandler drawableHandler;
+    private LightingHandler lightingHandler;
 
-    private PriorityQueue<OffsetImage> drawables;
     private ArrayList<LightRequest> lights;
-
 
     public Renderer(Window window){
         canvasWidth = window.getWidth();
@@ -31,47 +30,40 @@ public class Renderer {
         lightBlock = new int[pixels.length];
         font = new Font(Font.DEFAULT);
 
-        drawables = new PriorityQueue<>(50, (image1, image2) -> {
+        // Does canvas height and width have to be saved in renderer?
+        drawableHandler = new DrawableHandler(canvasWidth, canvasHeight, pixels);
+        lightingHandler = new LightingHandler(canvasWidth, canvasHeight, pixels.length);
 
-            if(image1.getRenderLayer() < image2.getRenderLayer()) {
-                return -1;
-            }
-            if(image1.getRenderLayer() > image2.getRenderLayer()) {
-                return 1;
-            }
-
-            return 0;
-        });
         lights = new ArrayList<>();
     }
 
     public void clear(){
         for(int i = 0; i < pixels.length; i++){
             pixels[i] = 0;
-            lightMap[i] = ambientLighting;
-            lightBlock[i] = 0;
+            //lightMap[i] = ambientLighting;
+            //lightBlock[i] = 0;
         }
+        lightingHandler.clear();
     }
 
     public void addImageToDraw(TileSheet sheet, int offsetX, int offsetY,
                                int tileFromLeft, int tileFromTop, int renderLayer) {
         Image image = sheet.getTile(tileFromLeft, tileFromTop);
         image.setLightBlock(sheet.getLightBlock());
-        drawables.add(new OffsetImage(image, offsetX, offsetY, renderLayer));
+
+        drawableHandler.addDrawable(new OffsetImage(image, offsetX, offsetY, renderLayer));
     }
 
     public void addImageToDraw(Image image, int offsetX, int offsetY, int renderLayer) {
-        drawables.add(new OffsetImage(image, offsetX, offsetY, renderLayer));
+        drawableHandler.addDrawable(new OffsetImage(image, offsetX, offsetY, renderLayer));
     }
 
     public void drawImages() {
-        OffsetImage drawable;
-        while(!drawables.isEmpty()) {
-            drawable = drawables.poll();
-            drawImage(drawable.getImage(), drawable.getOffsetX(), drawable.getOffsetY());
-        }
+        drawableHandler.drawImages();
+        this.pixels = drawableHandler.pixels;
     }
 
+    /*
     public void drawText(String text, int offsetX, int offsetY, int color) {
 
         Image fontImage = font.getFontImage();
@@ -98,13 +90,17 @@ public class Renderer {
             letterOffset += font.getCharacterWidth(character);
         }
     }
+    */
 
+    /* TODO Check if this should be removed or not
     public void drawTile(TileSheet sheet, int offsetX, int offsetY,
                          int tileFromLeft, int tileFromTop) {
         Image image = sheet.getTile(tileFromLeft, tileFromTop);
         drawImage(image, offsetX, offsetY);
     }
+    */
 
+    /*
     public void drawImage(Image image, int offsetX, int offsetY) {
 
         if(isOutsideOfCanvas(image.getWidth(), image.getHeight(), offsetX, offsetY)) {
@@ -142,6 +138,8 @@ public class Renderer {
             }
         }
     }
+    */
+    /*
     public void setPixel(int x, int y, int value, int lightBlock) {
 
         float alpha = ((value >> 24) & 0xff)/255f;
@@ -170,24 +168,33 @@ public class Renderer {
             pixels[x + y * canvasWidth] = (blendedRed << 16 | blendedGreen << 8 | blendedBlue);
         }
     }
+    */
 
+    /*
     private int reduceAreaToDraw(int start, int offset) {
         return start - offset;
     }
+    */
 
+    /*
     private boolean isOutsideOfCanvas(int width, int height, int offsetX, int offsetY) {
         return offsetX < -width || offsetY < -height ||
                 offsetX >= canvasWidth || offsetY >= canvasHeight;
     }
+    */
 
+    /*
     private boolean isOutsideOfCanvas(int x, int y) {
         return x < 0 || x >= canvasWidth || y < 0 || y >= canvasHeight;
     }
+    */
 
     public int getFontHeight() {
         return font.getHeight();
     }
 
+
+    /*
     public void setLightMapPixel(int x, int y, int value){
         if(isOutsideOfCanvas(x, y)){
             return;
@@ -208,7 +215,9 @@ public class Renderer {
 
         lightMap[x + y * canvasWidth] = (maxRed << 16 | maxGreen << 8 | maxBlue);
     }
+    */
 
+    /*
     public void setLightBlock(int x, int y, int value){
         if(isOutsideOfCanvas(x, y)){
             return;
@@ -216,13 +225,20 @@ public class Renderer {
 
         lightBlock[x + y * canvasWidth] = value;
     }
+    */
 
     public void addLightToDraw(Light light, int offsetX, int offsetY) {
-        lights.add(new LightRequest(light, offsetX, offsetY));
+        lightingHandler.addLight(new LightRequest(light, offsetX, offsetY));
+        //lights.add(new LightRequest(light, offsetX, offsetY));
     }
 
     public void drawLight() {
 
+        lightingHandler.setPixels(this.pixels);
+        lightingHandler.drawLight();
+        this.pixels =lightingHandler.getPixels();
+
+        /*
         for(LightRequest request : lights) {
             setLight(request.getLight(), request.getCenterX(), request.getCenterY());
         }
@@ -240,8 +256,10 @@ public class Renderer {
                         (int)(green * lightMapGreen) << 8 |
                         (int)(blue * lightMapBlue);
         }
+        */
     }
 
+    /*
     public void setLight(Light light, int offsetX, int offsetY){
         int radius = light.getRadius();
         int diameter = light.getDiameter();
@@ -253,7 +271,9 @@ public class Renderer {
             setLightLine(light, radius, radius, diameter, i, offsetX, offsetY);
         }
     }
+    */
 
+    /*
     private void setLightLine(Light light, int startX, int startY, int endX, int endY, int offsetX, int offsetY) {
         int dX = Math.abs(endX - startX);
         int dY = Math.abs(endY - startY);
@@ -297,7 +317,9 @@ public class Renderer {
             }
         }
     }
+    */
 
+    /* TODO fix
     public void drawRectangle(int offsetX, int offsetY, int width, int height, int color){
         for(int y = 0; y <= height; y++){
             setPixel(offsetX, y + offsetY, color, Light.NONE);
@@ -309,7 +331,9 @@ public class Renderer {
             setPixel(x + offsetX, offsetY + height, color, Light.NONE);
         }
     }
+    */
 
+    /* TODO fix
     public void drawFilledRectangle(int offsetX, int offsetY, int width, int height, int color){
 
         if(isOutsideOfCanvas(width, height, offsetX, offsetY)){
@@ -339,6 +363,7 @@ public class Renderer {
             }
         }
     }
+    */
 
 
 

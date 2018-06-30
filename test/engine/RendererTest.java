@@ -1,5 +1,6 @@
 package engine;
 
+import engine.rendering.Renderer;
 import engine.window.Window;
 import engine.window.WindowSettings;
 import org.junit.*;
@@ -18,7 +19,7 @@ public class RendererTest {
     @Test
     public void setPixelShouldMakeWindowGreen(){
 
-        window.setVisible(true);
+       /* window.setVisible(true);
 
 
         for(int y = 0; y < window.getHeight(); y++) {
@@ -34,6 +35,6 @@ public class RendererTest {
             Thread.sleep(3000);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 }
