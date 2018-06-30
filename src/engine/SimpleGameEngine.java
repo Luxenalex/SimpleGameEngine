@@ -77,9 +77,10 @@ public class SimpleGameEngine implements Runnable {
             if(render) {
                 renderer.clear();
                 game.render(this, renderer);
-                //renderer.drawText("FPS: " + fps, 0, 0, 0xFFFFFFFF); TODO lägg tilbax!
-                //renderer.drawText("x: " + input.getMouseX() + " y: " + input.getMouseY(), TODO lägg tillbax!
-                                  //0, renderer.getFontHeight(), 0xFFFFFFFF);
+                renderer.drawText("FPS: " + fps, 0, 0, 0xFFFFFFFF);
+                // Could be more efficient to get font height only once.
+                renderer.drawText("x: " + input.getMouseX() + " y: " + input.getMouseY(),
+                                  0, renderer.getFontHeight(), 0xFFFFFFFF);
                 window.update();
                 frames++;
             }

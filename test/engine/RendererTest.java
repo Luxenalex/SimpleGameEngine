@@ -29,7 +29,7 @@ public class RendererTest {
         }
 
         window.update();
-        renderer.clear();
+        renderer.clearLightMap();
 
         try {
             Thread.sleep(3000);

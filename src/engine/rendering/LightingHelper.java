@@ -6,42 +6,32 @@ import engine.gfx.LightRequest;
 import java.util.ArrayList;
 
 /**
- * Created by lux on 6/29/18.
+ * Manages rendering of lighting.
  */
-public class LightingHandler {
+class LightingHelper extends RenderingHelper {
 
     private ArrayList<LightRequest> lights;
-    protected int pixels[];
     private int[] lightMap;
-    private int[] lightBlock;
-    private int canvasWidth, canvasHeight;
     private int ambientLighting = 0xFF6b6b6b;
 
-    public LightingHandler(int canvasWidth, int canvasHeight, int[] pixels, int[] lightBlock){
-        this.canvasWidth = canvasWidth;
-        this.canvasHeight = canvasHeight;
+    LightingHelper(int canvasWidth, int canvasHeight, int[] pixels, int[] lightBlock){
+        super(canvasWidth, canvasHeight, pixels, lightBlock);
+
         lights = new ArrayList<>();
-        this.pixels = pixels;
-        this.lightBlock = lightBlock;
         lightMap = new int[pixels.length];
     }
 
-    public void clear(){
+    void clearLightMap(){
         for(int i = 0; i < pixels.length; i++){
             lightMap[i] = ambientLighting;
-            //lightBlock[i] = 0;
         }
     }
 
-    public void setPixels(int[] pixels) {
-        this.pixels = pixels;
-    }
-
-    public void addLight(LightRequest lightRequest) {
+    void addLight(LightRequest lightRequest) {
         lights.add(lightRequest);
     }
 
-    public void drawLight() {
+    void drawLight() {
 
         for(LightRequest request : lights) {
             setLight(request.getLight(), request.getCenterX(), request.getCenterY());
@@ -62,7 +52,7 @@ public class LightingHandler {
         }
     }
 
-    public void setLight(Light light, int offsetX, int offsetY){
+    private void setLight(Light light, int offsetX, int offsetY){
         int radius = light.getRadius();
         int diameter = light.getDiameter();
 
@@ -118,7 +108,7 @@ public class LightingHandler {
         }
     }
 
-    public void setLightMapPixel(int x, int y, int value){
+    private void setLightMapPixel(int x, int y, int value){
         if(isOutsideOfCanvas(x, y)){
             return;
         }
@@ -137,22 +127,5 @@ public class LightingHandler {
         int maxBlue = Math.max(baseBlue, newBlue);
 
         lightMap[x + y * canvasWidth] = (maxRed << 16 | maxGreen << 8 | maxBlue);
-    }
-
-    //TODO move to superclass???
-    private boolean isOutsideOfCanvas(int x, int y) {
-        return x < 0 || x >= canvasWidth || y < 0 || y >= canvasHeight;
-    }
-
-    public int[] getPixels() {
-        return pixels;
-    }
-
-    public void setLightBlock(int x, int y, int value){
-        if(isOutsideOfCanvas(x, y)){
-            return;
-        }
-
-        lightBlock[x + y * canvasWidth] = value;
     }
 }
