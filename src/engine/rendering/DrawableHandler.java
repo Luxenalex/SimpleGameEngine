@@ -16,12 +16,14 @@ public class DrawableHandler {
     private int canvasWidth;
     private int canvasHeight;
     protected int pixels[];
+    private int[] lightBlock;
 
-    public DrawableHandler(int canvasWidth, int canvasHeight, int[] pixels){
+    public DrawableHandler(int canvasWidth, int canvasHeight, int[] pixels, int[] lightBlock){
 
         this.canvasWidth = canvasWidth;
         this.canvasHeight = canvasHeight;
         this.pixels = pixels;
+        this.lightBlock = lightBlock;
 
         drawables = new PriorityQueue<OffsetImage>(50, new Comparator<OffsetImage>() {
             @Override
@@ -114,7 +116,7 @@ public class DrawableHandler {
         }
         if(alpha == 1) {
             pixels[x + y * canvasWidth] = value;
-            //setLightBlock(x, y, lightBlock); TODO Must be moved!!
+            setLightBlock(x, y, lightBlock);
         }
         else {
             int color = pixels[x + y * canvasWidth];
@@ -132,6 +134,19 @@ public class DrawableHandler {
 
             this.pixels[x + y * canvasWidth] = (blendedRed << 16 | blendedGreen << 8 | blendedBlue);
         }
+    }
+
+    public void setLightBlock(int x, int y, int value){
+        if(isOutsideOfCanvas(x, y)){
+            return;
+        }
+
+        lightBlock[x + y * canvasWidth] = value;
+    }
+
+    //TODO move to superclass???
+    private boolean isOutsideOfCanvas(int x, int y) {
+        return x < 0 || x >= canvasWidth || y < 0 || y >= canvasHeight;
     }
 
 }

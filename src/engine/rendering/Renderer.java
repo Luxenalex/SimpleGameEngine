@@ -31,8 +31,8 @@ public class Renderer {
         font = new Font(Font.DEFAULT);
 
         // Does canvas height and width have to be saved in renderer?
-        drawableHandler = new DrawableHandler(canvasWidth, canvasHeight, pixels);
-        lightingHandler = new LightingHandler(canvasWidth, canvasHeight, pixels.length);
+        drawableHandler = new DrawableHandler(canvasWidth, canvasHeight, pixels, lightBlock);
+        lightingHandler = new LightingHandler(canvasWidth, canvasHeight, pixels, lightBlock);
 
         lights = new ArrayList<>();
     }
@@ -41,7 +41,7 @@ public class Renderer {
         for(int i = 0; i < pixels.length; i++){
             pixels[i] = 0;
             //lightMap[i] = ambientLighting;
-            //lightBlock[i] = 0;
+            lightBlock[i] = 0;
         }
         lightingHandler.clear();
     }
@@ -234,9 +234,9 @@ public class Renderer {
 
     public void drawLight() {
 
-        lightingHandler.setPixels(this.pixels);
+        //lightingHandler.setPixels(this.pixels);
         lightingHandler.drawLight();
-        this.pixels =lightingHandler.getPixels();
+        //this.pixels =lightingHandler.getPixels();
 
         /*
         for(LightRequest request : lights) {

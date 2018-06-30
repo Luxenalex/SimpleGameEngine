@@ -17,18 +17,19 @@ public class LightingHandler {
     private int canvasWidth, canvasHeight;
     private int ambientLighting = 0xFF6b6b6b;
 
-    public LightingHandler(int canvasWidth, int canvasHeight, int pixelsSize){
+    public LightingHandler(int canvasWidth, int canvasHeight, int[] pixels, int[] lightBlock){
         this.canvasWidth = canvasWidth;
         this.canvasHeight = canvasHeight;
         lights = new ArrayList<>();
-        lightBlock = new int[pixelsSize];
-        lightMap = new int[pixelsSize];
+        this.pixels = pixels;
+        this.lightBlock = lightBlock;
+        lightMap = new int[pixels.length];
     }
 
     public void clear(){
         for(int i = 0; i < pixels.length; i++){
             lightMap[i] = ambientLighting;
-            lightBlock[i] = 0;
+            //lightBlock[i] = 0;
         }
     }
 
