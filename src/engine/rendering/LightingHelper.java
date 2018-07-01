@@ -78,7 +78,7 @@ class LightingHelper extends RenderingHelper {
             int screenX = startX - light.getRadius() + offsetX;
             int screenY = startY - light.getRadius() + offsetY;
 
-            if(isOutsideOfCanvas(screenX, screenY)){
+            if(super.isOutsideOfCanvas(screenX, screenY)){
                 return;
             }
 
@@ -109,7 +109,7 @@ class LightingHelper extends RenderingHelper {
     }
 
     private void setLightMapPixel(int x, int y, int value){
-        if(isOutsideOfCanvas(x, y)){
+        if(super.isOutsideOfCanvas(x, y)){
             return;
         }
 
@@ -128,4 +128,5 @@ class LightingHelper extends RenderingHelper {
 
         lightMap[x + y * canvasWidth] = (maxRed << 16 | maxGreen << 8 | maxBlue);
     }
+
 }

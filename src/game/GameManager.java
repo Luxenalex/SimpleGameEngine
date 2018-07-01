@@ -68,13 +68,13 @@ public class GameManager extends AbstractGame {
                 3
         );
         renderer.addImageToDraw(background, 0, 0, 0);
-
         renderer.drawImages();
+        renderer.drawTile(ghostLink, 100, 129, 1, 0);
+        renderer.drawFilledRectangle(20, 29, 50, 90, 0xffffccdd);
         renderer.addLightToDraw(light, gameContainer.getInput().getMouseX() - 7, gameContainer.getInput().getMouseY());
         renderer.addLightToDraw(new Light(75, 0xFF0000FF), 200, 150);
-
         renderer.drawLight();
-
+        renderer.drawRectangle(10, 10, 300, 200, 0xff00cccc);
     }
 
     public static void main(String args[]){

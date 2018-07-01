@@ -2,6 +2,7 @@ package engine.rendering;
 
 import engine.gfx.Image;
 import engine.gfx.OffsetImage;
+import engine.gfx.TileSheet;
 
 import java.util.Comparator;
 import java.util.PriorityQueue;
@@ -9,7 +10,7 @@ import java.util.PriorityQueue;
 /**
  * Manages the rendering of images.
  */
-public class ImageHelper extends RenderingHelper {
+class ImageHelper extends RenderingHelper {
 
     private PriorityQueue<OffsetImage> drawables;
 
@@ -34,10 +35,6 @@ public class ImageHelper extends RenderingHelper {
         drawables.add(drawable);
     }
 
-    public PriorityQueue<OffsetImage> getDrawables() {
-        return drawables;
-    }
-
     private OffsetImage getDrawable() {
         return drawables.poll();
     }
@@ -51,10 +48,6 @@ public class ImageHelper extends RenderingHelper {
         }
     }
 
-    private int reduceAreaToDraw(int start, int offset) {
-        return start - offset;
-    }
-
     private void drawImage(Image image, int offsetX, int offsetY) {
 
         if(super.isOutsideOfCanvas(image.getWidth(), image.getHeight(), offsetX, offsetY)) {
@@ -65,20 +58,20 @@ public class ImageHelper extends RenderingHelper {
         int startY = 0;
 
         if(offsetX < 0){
-            startX = reduceAreaToDraw(startX, offsetX);
+            startX = super.reduceAreaToDraw(startX, offsetX);
         }
         if(offsetY < 0){
-            startY = reduceAreaToDraw(startY, offsetY);
+            startY = super.reduceAreaToDraw(startY, offsetY);
         }
 
         int imageWidth = image.getWidth();
         if(imageWidth + offsetX >= canvasWidth){
-            imageWidth = reduceAreaToDraw(imageWidth, imageWidth + offsetX - canvasWidth);
+            imageWidth = super.reduceAreaToDraw(imageWidth, imageWidth + offsetX - canvasWidth);
         }
 
         int imageHeight = image.getHeight();
         if (imageHeight + offsetY >= canvasHeight){
-            imageHeight = reduceAreaToDraw(imageHeight, imageHeight + offsetY - canvasHeight);
+            imageHeight = super.reduceAreaToDraw(imageHeight, imageHeight + offsetY - canvasHeight);
         }
 
         for(int y = startY; y < imageHeight; y++) {
@@ -91,6 +84,12 @@ public class ImageHelper extends RenderingHelper {
                 );
             }
         }
+    }
+
+    void drawTile(TileSheet sheet, int offsetX, int offsetY,
+                         int tileFromLeft, int tileFromTop) {
+        Image image = sheet.getTile(tileFromLeft, tileFromTop);
+        drawImage(image, offsetX, offsetY);
     }
 
 }

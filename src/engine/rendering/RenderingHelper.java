@@ -1,9 +1,10 @@
 package engine.rendering;
 
 /**
- * Superclass for the different Renderer helping classes.
+ * Abstract superclass for the different Renderer helping classes. Contains
+ * methods and data that is of interest for subclasses.
  */
-public class RenderingHelper {
+public abstract class RenderingHelper {
 
     int canvasWidth;
     int canvasHeight;
@@ -24,6 +25,10 @@ public class RenderingHelper {
 
     boolean isOutsideOfCanvas(int x, int y) {
         return x < 0 || x >= canvasWidth || y < 0 || y >= canvasHeight;
+    }
+
+    int reduceAreaToDraw(int start, int offset) {
+        return start - offset;
     }
 
     void setPixel(int x, int y, int value, int lightBlock) {
