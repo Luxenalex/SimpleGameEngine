@@ -10,11 +10,11 @@ import java.util.PriorityQueue;
 /**
  * Manages the rendering of images.
  */
-class ImageHelper extends RenderingHelper {
+class ImageRenderer extends CanvasRenderer {
 
     private PriorityQueue<OffsetImage> drawables;
 
-    ImageHelper(int canvasWidth, int canvasHeight, int[] pixels, int[] lightBlock){
+    ImageRenderer(int canvasWidth, int canvasHeight, int[] pixels, int[] lightBlock){
         super(canvasWidth, canvasHeight, pixels, lightBlock);
 
         drawables = new PriorityQueue<OffsetImage>(50, new Comparator<OffsetImage>() {

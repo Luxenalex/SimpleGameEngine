@@ -6,11 +6,11 @@ import engine.gfx.Image;
 /**
  * Manages rendering of text.
  */
-class TextHelper extends RenderingHelper {
+class TextRenderer extends CanvasRenderer {
 
     private Font font;
 
-    TextHelper(int canvasWidth, int canvasHeight, int[] pixels, int[] lightBlock){
+    TextRenderer(int canvasWidth, int canvasHeight, int[] pixels, int[] lightBlock){
         super(canvasWidth, canvasHeight, pixels, lightBlock);
 
         font = new Font(Font.DEFAULT);

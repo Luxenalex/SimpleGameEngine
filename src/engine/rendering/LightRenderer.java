@@ -8,13 +8,13 @@ import java.util.ArrayList;
 /**
  * Manages rendering of lighting.
  */
-class LightingHelper extends RenderingHelper {
+class LightRenderer extends CanvasRenderer {
 
     private ArrayList<LightRequest> lights;
     private int[] lightMap;
     private int ambientLighting = 0xFF6b6b6b;
 
-    LightingHelper(int canvasWidth, int canvasHeight, int[] pixels, int[] lightBlock){
+    LightRenderer(int canvasWidth, int canvasHeight, int[] pixels, int[] lightBlock){
         super(canvasWidth, canvasHeight, pixels, lightBlock);
 
         lights = new ArrayList<>();

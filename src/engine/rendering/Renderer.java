@@ -9,10 +9,10 @@ public class Renderer {
 
     private int[] pixels;
     private int[] lightBlock;
-    private ImageHelper imageHelper;
-    private LightingHelper lightingHelper;
-    private TextHelper textHelper;
-    private ShapeHelper shapeHelper;
+    private ImageRenderer imageRenderer;
+    private LightRenderer lightRenderer;
+    private TextRenderer textRenderer;
+    private ShapeRenderer shapeRenderer;
 
     public Renderer(Window window){
 
@@ -22,10 +22,10 @@ public class Renderer {
         int canvasWidth = window.getWidth();
         lightBlock = new int[pixels.length];
 
-        imageHelper = new ImageHelper(canvasWidth, canvasHeight, pixels, lightBlock);
-        lightingHelper = new LightingHelper(canvasWidth, canvasHeight, pixels, lightBlock);
-        textHelper = new TextHelper(canvasWidth, canvasHeight, pixels, lightBlock);
-        shapeHelper = new ShapeHelper(canvasWidth, canvasHeight, pixels, lightBlock);
+        imageRenderer = new ImageRenderer(canvasWidth, canvasHeight, pixels, lightBlock);
+        lightRenderer = new LightRenderer(canvasWidth, canvasHeight, pixels, lightBlock);
+        textRenderer = new TextRenderer(canvasWidth, canvasHeight, pixels, lightBlock);
+        shapeRenderer = new ShapeRenderer(canvasWidth, canvasHeight, pixels, lightBlock);
     }
 
     public void clear(){
@@ -33,7 +33,7 @@ public class Renderer {
             pixels[i] = 0;
             lightBlock[i] = 0;
         }
-        lightingHelper.clearLightMap();
+        lightRenderer.clearLightMap();
     }
 
     public void addImageToDraw(TileSheet sheet, int offsetX, int offsetY,
@@ -41,45 +41,45 @@ public class Renderer {
 
         Image image = sheet.getTile(tileFromLeft, tileFromTop);
         image.setLightBlock(sheet.getLightBlock());
-        imageHelper.addDrawable(new OffsetImage(image, offsetX, offsetY, renderLayer));
+        imageRenderer.addDrawable(new OffsetImage(image, offsetX, offsetY, renderLayer));
     }
 
     public void addImageToDraw(Image image, int offsetX, int offsetY, int renderLayer) {
-        imageHelper.addDrawable(new OffsetImage(image, offsetX, offsetY, renderLayer));
+        imageRenderer.addDrawable(new OffsetImage(image, offsetX, offsetY, renderLayer));
     }
 
     public void drawImages() {
-        imageHelper.drawImages();
-        this.pixels = imageHelper.pixels;
+        imageRenderer.drawImages();
+        this.pixels = imageRenderer.pixels;
     }
 
     public void drawText(String text, int offsetX, int offsetY, int color) {
-        textHelper.drawText(text, offsetX, offsetY, color);
+        textRenderer.drawText(text, offsetX, offsetY, color);
     }
 
     public int getFontHeight(){
-        return textHelper.getFontHeight();
+        return textRenderer.getFontHeight();
     }
 
     public void drawTile(TileSheet sheet, int offsetX, int offsetY,
                          int tileFromLeft, int tileFromTop) {
-        imageHelper.drawTile(sheet, offsetX, offsetY, tileFromLeft, tileFromTop);
+        imageRenderer.drawTile(sheet, offsetX, offsetY, tileFromLeft, tileFromTop);
     }
 
     public void addLightToDraw(Light light, int offsetX, int offsetY) {
-        lightingHelper.addLight(new LightRequest(light, offsetX, offsetY));
+        lightRenderer.addLight(new LightRequest(light, offsetX, offsetY));
     }
 
     public void drawLight() {
-        lightingHelper.drawLight();
+        lightRenderer.drawLight();
     }
 
     public void drawRectangle(int offsetX, int offsetY, int width, int height, int color){
-        shapeHelper.drawRectangle(offsetX, offsetY, width, height, color);
+        shapeRenderer.drawRectangle(offsetX, offsetY, width, height, color);
     }
 
     public void drawFilledRectangle(int offsetX, int offsetY, int width, int height, int color){
-        shapeHelper.drawFilledRectangle(offsetX, offsetY, width, height, color);
+        shapeRenderer.drawFilledRectangle(offsetX, offsetY, width, height, color);
     }
 
 }

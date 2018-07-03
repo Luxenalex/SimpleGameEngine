@@ -5,9 +5,9 @@ import engine.gfx.Light;
 /**
  * Manages rendering of primitive shapes.
  */
-class ShapeHelper extends RenderingHelper {
+class ShapeRenderer extends CanvasRenderer {
 
-    ShapeHelper(int canvasWidth, int canvasHeight, int[] pixels, int[] lightBlock){
+    ShapeRenderer(int canvasWidth, int canvasHeight, int[] pixels, int[] lightBlock){
         super(canvasWidth, canvasHeight, pixels, lightBlock);
     }
 

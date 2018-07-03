@@ -34,7 +34,7 @@ public class SimpleGameEngine implements Runnable {
     }
 
     public void stop() {
-
+        gameLoop.interrupt();
     }
 
     @Override

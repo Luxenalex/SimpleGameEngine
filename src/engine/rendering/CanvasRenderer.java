@@ -4,14 +4,14 @@ package engine.rendering;
  * Abstract superclass for the different Renderer helping classes. Contains
  * methods and data that is of interest for subclasses.
  */
-public abstract class RenderingHelper {
+abstract class CanvasRenderer {
 
     int canvasWidth;
     int canvasHeight;
     int pixels[];
     int[] lightBlock;
 
-    RenderingHelper(int canvasWidth, int canvasHeight, int[] pixels, int[] lightBlock){
+    CanvasRenderer(int canvasWidth, int canvasHeight, int[] pixels, int[] lightBlock){
         this.canvasWidth = canvasWidth;
         this.canvasHeight = canvasHeight;
         this.pixels = pixels;
