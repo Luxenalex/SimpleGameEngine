@@ -1,15 +1,15 @@
 package engine.gfx;
 
+import engine.Position;
+
 public class LightRequest {
 
     private Light light;
-    private int centerX;
-    private int centerY;
+    private Position center;
 
-    public LightRequest(Light light, int centerX, int centerY) {
+    public LightRequest(Light light, Position center) {
         this.light = light;
-        this.centerX = centerX;
-        this.centerY = centerY;
+        this.center = center;
     }
 
     public Light getLight() {
@@ -17,10 +17,10 @@ public class LightRequest {
     }
 
     public int getCenterX() {
-        return centerX;
+        return center.getX();
     }
 
     public int getCenterY() {
-        return centerY;
+        return center.getY();
     }
 }

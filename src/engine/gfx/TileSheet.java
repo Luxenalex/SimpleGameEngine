@@ -1,5 +1,7 @@
 package engine.gfx;
 
+import engine.Position;
+
 public class TileSheet extends Image {
 
     public int tileWidth;
@@ -19,13 +21,13 @@ public class TileSheet extends Image {
         return this.tileHeight;
     }
 
-    public Image getTile(int tileFromLeft, int tileFromTop) {
+    public Image getTile(Position tile) {
 
         int[] pixels = new int[tileWidth * tileHeight];
 
-        int startY = tileHeight * tileFromTop;
+        int startY = tileHeight * tile.getY();
         int endY = startY + tileHeight;
-        int startX = tileWidth * tileFromLeft;
+        int startX = tileWidth * tile.getX();
         int endX = startX + tileWidth;
 
         int index = 0;

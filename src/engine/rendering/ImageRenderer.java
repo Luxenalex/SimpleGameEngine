@@ -1,10 +1,10 @@
 package engine.rendering;
 
+import engine.Position;
 import engine.gfx.Image;
 import engine.gfx.OffsetImage;
 import engine.gfx.TileSheet;
 
-import java.util.Comparator;
 import java.util.PriorityQueue;
 
 /**
@@ -12,45 +12,44 @@ import java.util.PriorityQueue;
  */
 class ImageRenderer extends CanvasRenderer {
 
-    private PriorityQueue<OffsetImage> drawables;
+    private PriorityQueue<OffsetImage> images;
 
     ImageRenderer(int canvasWidth, int canvasHeight, int[] pixels, int[] lightBlock){
         super(canvasWidth, canvasHeight, pixels, lightBlock);
 
-        drawables = new PriorityQueue<OffsetImage>(50, new Comparator<OffsetImage>() {
-            @Override
-            public int compare(OffsetImage image1, OffsetImage image2) {
-                if(image1.getRenderLayer() < image2.getRenderLayer()) {
-                    return -1;
-                }
-                if(image1.getRenderLayer() > image2.getRenderLayer()) {
-                    return 1;
-                }
-                return 0;
+        images = new PriorityQueue<>(50, (image1, image2) -> {
+            if(image1.getRenderLayer() < image2.getRenderLayer()) {
+                return -1;
             }
+            if(image1.getRenderLayer() > image2.getRenderLayer()) {
+                return 1;
+            }
+            return 0;
         });
     }
 
     void addDrawable(OffsetImage drawable){
-        drawables.add(drawable);
+        images.add(drawable);
     }
 
     private OffsetImage getDrawable() {
-        return drawables.poll();
+        return images.poll();
     }
 
     void drawImages() {
 
-        OffsetImage drawable;
-        while(!drawables.isEmpty()) {
-            drawable = getDrawable();
-            drawImage(drawable.getImage(), drawable.getOffsetX(), drawable.getOffsetY());
+        OffsetImage image;
+        while(!images.isEmpty()) {
+            image = getDrawable();
+            drawImage(image.getImage(), image.getOffset());
         }
     }
 
-    private void drawImage(Image image, int offsetX, int offsetY) {
+    private void drawImage(Image image, Position offset) {
+        int offsetX = offset.getX();
+        int offsetY = offset.getY();
 
-        if(super.isOutsideOfCanvas(image.getWidth(), image.getHeight(), offsetX, offsetY)) {
+        if(super.isOutsideOfCanvas(image.getWidth(), image.getHeight(), offset)) {
             return;
         }
 
@@ -86,10 +85,9 @@ class ImageRenderer extends CanvasRenderer {
         }
     }
 
-    void drawTile(TileSheet sheet, int offsetX, int offsetY,
-                         int tileFromLeft, int tileFromTop) {
-        Image image = sheet.getTile(tileFromLeft, tileFromTop);
-        drawImage(image, offsetX, offsetY);
+    void drawTile(TileSheet sheet, Position offset, Position tilePosition) {
+        Image image = sheet.getTile(tilePosition);
+        drawImage(image, offset);
     }
 
 }

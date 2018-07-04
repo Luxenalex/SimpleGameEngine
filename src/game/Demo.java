@@ -1,6 +1,7 @@
 package game;
 
 import engine.AbstractGame;
+import engine.Position;
 import engine.SimpleGameEngine;
 import engine.audio.SoundClip;
 import engine.gfx.Light;
@@ -52,14 +53,20 @@ public class Demo extends AbstractGame {
         renderer.setBackground(terrain, placement);
         renderer.addImageToDraw(
                 hero,
-                gameContainer.getInput().getMouseX() - TILE_SIZE/2,
-                gameContainer.getInput().getMouseY() - TILE_SIZE/2,
-                (int)temp,
-                0,
+                new Position(
+                        gameContainer.getInput().getMouseX() - TILE_SIZE / 2,
+                        gameContainer.getInput().getMouseY() - TILE_SIZE/2),
+                new Position((int)temp, 0),
                 3
         );
         renderer.drawImages();
-        renderer.addLightToDraw(light, gameContainer.getInput().getMouseX() - 7, gameContainer.getInput().getMouseY());
+        renderer.addLightToDraw(
+                light,
+                new Position(
+                        gameContainer.getInput().getMouseX() - 7,
+                        gameContainer.getInput().getMouseY()
+                )
+        );
         renderer.drawLight();
     }
 

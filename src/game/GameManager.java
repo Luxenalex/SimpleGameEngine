@@ -1,6 +1,7 @@
 package game;
 
 import engine.AbstractGame;
+import engine.Position;
 import engine.rendering.Renderer;
 import engine.SimpleGameEngine;
 import engine.audio.SoundClip;
@@ -53,28 +54,43 @@ public class GameManager extends AbstractGame {
         //TODO Consider offsetting to center mouse on link.
         renderer.addImageToDraw(
                 ghostLink,
-                gameContainer.getInput().getMouseX() - TILE_SIZE/2,
-                gameContainer.getInput().getMouseY() - TILE_SIZE/2,
-                (int)temp,
-                0,
+                new Position(gameContainer.getInput().getMouseX() - TILE_SIZE / 2,
+                             gameContainer.getInput().getMouseY() - TILE_SIZE/2),
+                new Position((int)temp, 0),
                 3
         );
         renderer.addImageToDraw(
                 link,
-                100,
-                150,
-                (int)temp,
-                0,
+                new Position(100, 150),
+                new Position((int)temp, 0),
                 3
         );
-        renderer.addImageToDraw(background, 0, 0, 0);
+        renderer.addImageToDraw(background, new Position(0, 0), 0);
         renderer.drawImages();
-        renderer.drawTile(ghostLink, 100, 129, 1, 0);
-        renderer.drawFilledRectangle(20, 29, 50, 90, 0xffffccdd);
-        renderer.addLightToDraw(light, gameContainer.getInput().getMouseX() - 7, gameContainer.getInput().getMouseY());
-        renderer.addLightToDraw(new Light(75, 0xFF0000FF), 200, 150);
+        renderer.drawTile(
+                ghostLink,
+                new Position(100, 129),
+                new Position(1, 0)
+        );
+        renderer.drawFilledRectangle(
+                new Position(20, 29),
+                50,
+                90,
+                0xffffccdd
+        );
+        renderer.addLightToDraw(
+                light,
+                new Position(
+                        gameContainer.getInput().getMouseX() - 7,
+                        gameContainer.getInput().getMouseY()
+                )
+        );
+        renderer.addLightToDraw(
+                new Light(75, 0xFF0000FF),
+                new Position(200, 150)
+        );
         renderer.drawLight();
-        renderer.drawRectangle(10, 10, 300, 200, 0xff00cccc);
+        renderer.drawRectangle(new Position(10, 10), 300, 200, 0xff00cccc);
     }
 
     public static void main(String args[]){

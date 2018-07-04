@@ -1,5 +1,6 @@
 package engine.gfx;
 
+import engine.Position;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -59,28 +60,28 @@ public class TileSheetTest {
     @Test
     public void shouldGetColorWhite() {
 
-        Image tile = image.getTile(0, 0);
+        Image tile = image.getTile(new Position(0, 0));
         assertEquals(0xFFFFFFFF, tile.getColor(0, 0));
         assertEquals(0xFFFFFFFF, tile.getColor(1, 0));
     }
 
     @Test
     public void shouldGetColorBlue() {
-        Image tile = image.getTile(0, 1);
+        Image tile = image.getTile(new Position(0, 1));
         assertEquals(0xFF0000FF, tile.getColor(0, 0));
         assertEquals(0xFF0000FF, tile.getColor(1, 0));
     }
 
     @Test
     public void shouldGetColorMagenta() {
-        Image tile = image.getTile(0, 5);
+        Image tile = image.getTile(new Position(0, 5));
         assertEquals(0xFFFF00FF, tile.getColor(0, 0));
         assertEquals(0xFFFF00FF, tile.getColor(1, 0));
     }
 
     @Test
     public void shouldGetColorGrey() {
-        Image tile = image.getTile(0, 15);
+        Image tile = image.getTile(new Position(0, 15));
         assertEquals(0xFF808080, tile.getColor(0, 0));
         assertEquals(0xFF808080, tile.getColor(1, 0));
     }

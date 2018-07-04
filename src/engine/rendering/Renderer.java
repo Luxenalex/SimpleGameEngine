@@ -1,5 +1,6 @@
 package engine.rendering;
 
+import engine.Position;
 import engine.gfx.*;
 import engine.window.Window;
 
@@ -57,49 +58,48 @@ public class Renderer {
         }
     }
 
-    public void addImageToDraw(TileSheet sheet, int offsetX, int offsetY,
-                               int tileFromLeft, int tileFromTop, int renderLayer) {
+    public void addImageToDraw(TileSheet sheet, Position offset,
+                               Position tilePosition, int renderLayer) {
 
-        Image image = sheet.getTile(tileFromLeft, tileFromTop);
+        Image image = sheet.getTile(tilePosition);
         image.setLightBlock(sheet.getLightBlock());
-        imageRenderer.addDrawable(new OffsetImage(image, offsetX, offsetY, renderLayer));
+        imageRenderer.addDrawable(new OffsetImage(image, offset, renderLayer));
     }
 
-    public void addImageToDraw(Image image, int offsetX, int offsetY, int renderLayer) {
-        imageRenderer.addDrawable(new OffsetImage(image, offsetX, offsetY, renderLayer));
+    public void addImageToDraw(Image image, Position offset, int renderLayer) {
+        imageRenderer.addDrawable(new OffsetImage(image, offset, renderLayer));
     }
 
     public void drawImages() {
         imageRenderer.drawImages();
     }
 
-    public void drawText(String text, int offsetX, int offsetY, int color) {
-        textRenderer.drawText(text, offsetX, offsetY, color);
+    public void drawText(String text, Position offset, int color) {
+        textRenderer.drawText(text, offset, color);
     }
 
     public int getFontHeight(){
         return textRenderer.getFontHeight();
     }
 
-    public void drawTile(TileSheet sheet, int offsetX, int offsetY,
-                         int tileFromLeft, int tileFromTop) {
-        imageRenderer.drawTile(sheet, offsetX, offsetY, tileFromLeft, tileFromTop);
+    public void drawTile(TileSheet sheet, Position offset, Position tilePosition) {
+        imageRenderer.drawTile(sheet, offset, tilePosition);
     }
 
-    public void addLightToDraw(Light light, int offsetX, int offsetY) {
-        lightRenderer.addLight(new LightRequest(light, offsetX, offsetY));
+    public void addLightToDraw(Light light, Position offset) {
+        lightRenderer.addLight(new LightRequest(light, offset));
     }
 
     public void drawLight() {
         lightRenderer.drawLight();
     }
 
-    public void drawRectangle(int offsetX, int offsetY, int width, int height, int color){
-        shapeRenderer.drawRectangle(offsetX, offsetY, width, height, color);
+    public void drawRectangle(Position offset, int width, int height, int color){
+        shapeRenderer.drawRectangle(offset, width, height, color);
     }
 
-    public void drawFilledRectangle(int offsetX, int offsetY, int width, int height, int color){
-        shapeRenderer.drawFilledRectangle(offsetX, offsetY, width, height, color);
+    public void drawFilledRectangle(Position offset, int width, int height, int color){
+        shapeRenderer.drawFilledRectangle(offset, width, height, color);
     }
 
     public void setBackground(TileSheet tileSheet, int[][] tilePlacements) {
@@ -112,8 +112,7 @@ public class Renderer {
         for(int[] tilePlacement : tilePlacements) {
             offsetX = (offsetX + tileSheet.getTileWidth()) % canvasWidth;
 
-            addImageToDraw(tileSheet, offsetX, offsetY, tilePlacement[0],
-                           tilePlacement[1], 0);
+            addImageToDraw(tileSheet, new Position(offsetX, offsetY), new Position(tilePlacement[0], tilePlacement[1]), 0);
 
             if(offsetX == (canvasWidth - tileSheet.getTileWidth())) {
                 offsetY += tileSheet.getTileHeight();

@@ -1,5 +1,6 @@
 package engine.rendering;
 
+import engine.Position;
 import engine.gfx.Light;
 
 /**
@@ -11,7 +12,10 @@ class ShapeRenderer extends CanvasRenderer {
         super(canvasWidth, canvasHeight, pixels, lightBlock);
     }
 
-    public void drawRectangle(int offsetX, int offsetY, int width, int height, int color){
+    public void drawRectangle(Position offset, int width, int height, int color){
+        int offsetX = offset.getX();
+        int offsetY = offset.getY();
+
         for(int y = 0; y <= height; y++){
             super.setPixel(offsetX, y + offsetY, color, Light.NONE);
             super.setPixel(offsetX + width, y + offsetY, color, Light.NONE);
@@ -23,9 +27,11 @@ class ShapeRenderer extends CanvasRenderer {
         }
     }
 
-    public void drawFilledRectangle(int offsetX, int offsetY, int width, int height, int color){
+    public void drawFilledRectangle(Position offset, int width, int height, int color){
+        int offsetX = offset.getX();
+        int offsetY = offset.getY();
 
-        if(super.isOutsideOfCanvas(width, height, offsetX, offsetY)){
+        if(super.isOutsideOfCanvas(width, height, offset)){
             return;
         }
 

@@ -1,5 +1,6 @@
 package engine.rendering;
 
+import engine.Position;
 import engine.gfx.Light;
 import engine.gfx.LightRequest;
 
@@ -34,7 +35,7 @@ class LightRenderer extends CanvasRenderer {
     void drawLight() {
 
         for(LightRequest request : lights) {
-            setLight(request.getLight(), request.getCenterX(), request.getCenterY());
+            setLight(request.getLight(), new Position(request.getCenterX(), request.getCenterY()));
         }
         lights.clear();
 
@@ -52,19 +53,24 @@ class LightRenderer extends CanvasRenderer {
         }
     }
 
-    private void setLight(Light light, int offsetX, int offsetY){
+    private void setLight(Light light, Position offset){
         int radius = light.getRadius();
         int diameter = light.getDiameter();
 
+        Position start = new Position(radius, radius);
         for(int i = 0; i <= light.getDiameter(); i++) {
-            setLightLine(light, radius, radius, i, 0, offsetX, offsetY);
-            setLightLine(light, radius, radius, i, diameter, offsetX, offsetY);
-            setLightLine(light, radius, radius, 0, i, offsetX, offsetY);
-            setLightLine(light, radius, radius, diameter, i, offsetX, offsetY);
+            setLightLine(light, start, i, 0, offset);
+            setLightLine(light, start, i, diameter, offset);
+            setLightLine(light, start, 0, i, offset);
+            setLightLine(light, start, diameter, i, offset);
         }
     }
 
-    private void setLightLine(Light light, int startX, int startY, int endX, int endY, int offsetX, int offsetY) {
+    private void setLightLine(Light light, Position start, int endX, int endY, Position offset) {
+
+        int startX = start.getX();
+        int startY = start.getY();
+
         int dX = Math.abs(endX - startX);
         int dY = Math.abs(endY - startY);
 
@@ -75,8 +81,8 @@ class LightRenderer extends CanvasRenderer {
         int error2;
 
         while(true) {
-            int screenX = startX - light.getRadius() + offsetX;
-            int screenY = startY - light.getRadius() + offsetY;
+            int screenX = startX - light.getRadius() + offset.getX();
+            int screenY = startY - light.getRadius() + offset.getY();
 
             if(super.isOutsideOfCanvas(screenX, screenY)){
                 return;

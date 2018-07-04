@@ -1,5 +1,6 @@
 package engine.rendering;
 
+import engine.Position;
 import engine.gfx.Font;
 import engine.gfx.Image;
 
@@ -16,12 +17,14 @@ class TextRenderer extends CanvasRenderer {
         font = new Font(Font.DEFAULT);
     }
 
-    void drawText(String text, int offsetX, int offsetY, int color) {
+    void drawText(String text, Position offset, int color) {
 
         Image fontImage = font.getFontImage();
         int letterOffset = 0;
         text = text.toUpperCase();
 
+        int offsetX = offset.getX();
+        int offsetY = offset.getY();
         for(int i = 0; i < text.length(); i++) {
             int character = text.codePointAt(i);
 

@@ -1,5 +1,6 @@
 package engine.rendering;
 
+import engine.Position;
 import engine.gfx.TileSheet;
 
 /**
@@ -20,9 +21,9 @@ abstract class CanvasRenderer {
         this.lightBlock = lightBlock;
     }
 
-    boolean isOutsideOfCanvas(int width, int height, int offsetX, int offsetY) {
-        return offsetX < -width || offsetY < -height ||
-                offsetX >= canvasWidth || offsetY >= canvasHeight;
+    boolean isOutsideOfCanvas(int width, int height, Position offset) {
+        return offset.getX() < -width || offset.getY() < -height ||
+                offset.getX() >= canvasWidth || offset.getY() >= canvasHeight;
     }
 
     boolean isOutsideOfCanvas(int x, int y) {
