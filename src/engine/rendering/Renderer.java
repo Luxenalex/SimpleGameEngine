@@ -7,19 +7,24 @@ import java.awt.image.DataBufferInt;
 
 public class Renderer {
 
-    private int[] pixels;
-    private int[] lightBlock;
     private ImageRenderer imageRenderer;
     private LightRenderer lightRenderer;
     private TextRenderer textRenderer;
     private ShapeRenderer shapeRenderer;
+
+    private int[] pixels;
+    private int[] lightBlock;
+    private int[] background = null;
+    private int[] backgroundLightBlock = null;
+
+    private int canvasWidth;
 
     public Renderer(Window window){
 
         pixels = ((DataBufferInt)window.getImageRasterDataBuffer()).getData();
 
         int canvasHeight = window.getHeight();
-        int canvasWidth = window.getWidth();
+        canvasWidth = window.getWidth();
         lightBlock = new int[pixels.length];
 
         imageRenderer = new ImageRenderer(canvasWidth, canvasHeight, pixels, lightBlock);
@@ -29,11 +34,27 @@ public class Renderer {
     }
 
     public void clear(){
+        if(background != null) {
+            clearToBackground();
+        }
+        else {
+            clearToBlack();
+        }
+        lightRenderer.clearLightMap();
+    }
+
+    private void clearToBackground() {
+        System.arraycopy(background, 0, pixels, 0,
+                         background.length);
+        System.arraycopy(backgroundLightBlock, 0, lightBlock, 0,
+                         backgroundLightBlock.length);
+    }
+
+    private void clearToBlack() {
         for(int i = 0; i < pixels.length; i++){
             pixels[i] = 0;
             lightBlock[i] = 0;
         }
-        lightRenderer.clearLightMap();
     }
 
     public void addImageToDraw(TileSheet sheet, int offsetX, int offsetY,
@@ -50,7 +71,6 @@ public class Renderer {
 
     public void drawImages() {
         imageRenderer.drawImages();
-        this.pixels = imageRenderer.pixels;
     }
 
     public void drawText(String text, int offsetX, int offsetY, int color) {
@@ -82,4 +102,26 @@ public class Renderer {
         shapeRenderer.drawFilledRectangle(offsetX, offsetY, width, height, color);
     }
 
+    public void setBackground(TileSheet tileSheet, int[][] tilePlacements) {
+
+        if(background != null) {
+            return;
+        }
+        int offsetX = -tileSheet.getTileWidth();
+        int offsetY = 0;
+        for(int[] tilePlacement : tilePlacements) {
+            offsetX = (offsetX + tileSheet.getTileWidth()) % canvasWidth;
+
+            addImageToDraw(tileSheet, offsetX, offsetY, tilePlacement[0],
+                           tilePlacement[1], 0);
+
+            if(offsetX == (canvasWidth - tileSheet.getTileWidth())) {
+                offsetY += tileSheet.getTileHeight();
+            }
+        }
+        drawImages();
+        background = new int[pixels.length];
+        backgroundLightBlock = new int[lightBlock.length];
+        System.arraycopy(pixels, 0, background, 0, pixels.length);
+    }
 }
