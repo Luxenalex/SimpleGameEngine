@@ -1,5 +1,7 @@
 package engine.rendering;
 
+import engine.gfx.TileSheet;
+
 /**
  * Abstract superclass for the different Renderer helping classes. Contains
  * methods and data that is of interest for subclasses.
@@ -8,7 +10,7 @@ abstract class CanvasRenderer {
 
     int canvasWidth;
     int canvasHeight;
-    int pixels[];
+    int[] pixels;
     int[] lightBlock;
 
     CanvasRenderer(int canvasWidth, int canvasHeight, int[] pixels, int[] lightBlock){
@@ -66,5 +68,4 @@ abstract class CanvasRenderer {
         }
         lightBlock[x + y * canvasWidth] = value;
     }
-
 }
